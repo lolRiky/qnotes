@@ -19,8 +19,9 @@ router.post('/register', async (req, res) => {
     const emailExists = await User.findOne({ email: req.body.email });
 
     // Checks if email exists
-    if(emailExists)
-        return res.status(400).send(`Email already exists.`);
+    if(emailExists) {
+        return res.status(409).send({xx: `Email already exists.`});
+    }
 
     // Hashing the password
     // Generate salt for hashing
@@ -45,7 +46,7 @@ router.post('/register', async (req, res) => {
         res.send({ user: savedUser._id });
     } catch (err) {
         // If any error, send error response
-        res.status(400).send(err);
+        res.send(err).statusCode(400);
     }
 });
 
@@ -61,7 +62,7 @@ router.post('/login', async (req, res) => {
 
     // If user doesn't exist
     if(!user)
-        return res.status(400).send(`Wrong credentials.`);
+        return res.send(`Wrong credentials.`).statusCode(400);
 
     // Check for entered password
     const validPassword = await bcrypt.compare(req.body.password, user.password);

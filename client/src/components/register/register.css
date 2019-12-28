@@ -1,0 +1,19 @@
+.register {
+    display:flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.register-field > * {
+    display: flex;
+    margin:0 auto;
+    width: 300px;
+}
+
+.register-field {
+    margin: 8px;
+}
+.text-warning {
+    color:red;
+    font-size: 14px;
+}
