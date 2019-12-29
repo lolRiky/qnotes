@@ -71,27 +71,25 @@ class Register extends Component {
     async submit(e) {
         e.preventDefault();
        
-        
-        axios.post('/api/user/register', {
-            name: this.state.name,
-            email: this.state.email,
-            password: this.state.password  
-        }).then(res => {
-            console.log(res);
-        }).catch( (err) => {
-            console.log(err);
-        });
+        try {
+            var result = await axios.post('/api/user/register', {
+                name: this.state.name,
+                email: this.state.email,
+                password: this.state.password
+            });
+            
+            if(!result.data.email)
+                return;
+            
+            this.setState({
+                errors: {
+                    email: result.data.email
+                }
+            });
 
-        // try {
-        //     var result = await axios.post('/api/user/register', {
-        //         name: this.state.name,
-        //         email: this.state.email,
-        //         password: this.state.password
-        //     });
-        //     console.log(result);
-        // } catch (err) {
-        //     console.log(`asdadasd`, err );
-        // }
+        } catch (err) {
+            console.log(err);
+        }
 
     }
 

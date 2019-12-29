@@ -1,0 +1,20 @@
+.login {
+    width: 600px;
+    max-width: 90%;
+    text-align: center;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-form {
+    width: inherit;
+    padding: 8px;
+}
+
+.login-form  [type=submit] {
+    width: 30%;
+}
