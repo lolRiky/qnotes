@@ -11,10 +11,10 @@ class Register extends Component {
         super(props);
 
         this.state = {
-            name: 'Patrik',
-            email: 'Pkljfgbdsafkkjsbfgjkldhsfkljsfbgkj@lksadjfhgfklajhg.com',
-            password: 'test123',
-            passwordAgain: 'test123',
+            name: '',
+            email: '',
+            password: '',
+            passwordAgain: '',
             errors: {
                 name: '',
                 email: '',
@@ -27,35 +27,29 @@ class Register extends Component {
     }
 
     change(e) {
-
         let name = e.target.name;
         let value = e.target.value;
 
-        let errors = { ...this.state.errors };
-
-        
         this.setState({
             [name]: value
         });
-
-        console.log(name);
+        
+        let errors = { ...this.state.errors };
         switch (name) {
             case "name":
                 errors.name = (value.trim()).length < 3 ? `Name must be at least 3 characters long` : ``;
                 break;
 
             case "email":
-                errors.email = value.length < 6 || this.validEmail(value) == null ? `Email must be at least 6 characters long and must include [@, .]` : ``;
+                errors.email = value.length < 6 && this.validEmail(value) == null ? `Email must be at least 6 characters long and must include [@, .]` : ``;
                 break;
 
             case "password":
-                errors.password = this.state.password.length <= 6 || this.state.password === this.state.passwordAgain
-                    ? `Password must be at least 6 characters long and they must match` : ``;
+                errors.password = value.length <= 5 || value !== this.state.passwordAgain ? `Passwords must match and be at least 6 characters long` : ``;
                 break;
 
             case "passwordAgain":
-                errors.password = this.state.password.length <= 6 || this.state.password === this.state.passwordAgain
-                    ? `Password must be at least 6 characters long and they must match` : ``;
+                errors.password = value.length <= 5 || value !== this.state.password ? `Passwords must match and be at least 6 characters long` : ``;
                 break;
 
             default:
@@ -70,22 +64,24 @@ class Register extends Component {
 
     async submit(e) {
         e.preventDefault();
-       
+
         try {
-            var result = await axios.post('/api/user/register', {
+            const result = await axios.post('/api/user/register', {
                 name: this.state.name,
                 email: this.state.email,
                 password: this.state.password
             });
-            
-            if(!result.data.email)
+
+            if(result.data.validation) {
+                this.setState({
+                    errors: {
+                        email: result.data.validation
+                    }
+                });
                 return;
-            
-            this.setState({
-                errors: {
-                    email: result.data.email
-                }
-            });
+            }
+
+            this.props.history.push('/Login');
 
         } catch (err) {
             console.log(err);
@@ -110,13 +106,13 @@ class Register extends Component {
                         <TextField onChange={e => this.change(e)}
                             name='name' placeholder="Name"
                             value={this.state.name} />
-                            <p className='text-warning'>{this.state.errors.name}</p>
+                        <p className='text-warning'>{this.state.errors.name}</p>
                     </div>
                     <div className='register-field'>
                         <TextField onChange={e => this.change(e)}
                             name='email' placeholder="Email"
-                            value={this.state.email}/>
-                            <p className='text-warning'>{this.state.errors.email}</p>
+                            value={this.state.email} />
+                        <p className='text-warning'>{this.state.errors.email}</p>
                     </div>
                     <div className='register-field'>
                         <TextField onChange={e => this.change(e)}
@@ -127,7 +123,7 @@ class Register extends Component {
                         <TextField onChange={e => this.change(e)}
                             name='passwordAgain' placeholder="Password Again" type='password'
                             value={this.state.passwordAgain} />
-                            <p className='text-warning'>{this.state.errors.password}</p>
+                        <p className='text-warning'>{this.state.errors.password}</p>
                     </div>
                     <Button variant='contained' color='primary' type='submit'>Register</Button>
                 </form>

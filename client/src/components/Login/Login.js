@@ -52,13 +52,6 @@ class Login extends Component {
 				return;
 			}
 			
-			if(res.data.crendentials) {
-				this.setState({
-					error: res.data.crendentials
-				});
-				return;			
-			}
-			
 			localStorage.setItem('jwt', res.data);
 			this.props.history.push('/Home');
 			

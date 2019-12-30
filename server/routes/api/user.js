@@ -10,17 +10,17 @@ router.post('/register', async (req, res) => {
     
     // Validate data
     const { error } = registerValidation(req.body);
-
+    
     // Checks if error exists
     if(error)
-        return res.send(error.details[0].message);
+        return res.send({ validation: error.details[0].message});
 
     // Query for entered email
     const emailExists = await User.findOne({ email: req.body.email });
 
     // Checks if email exists
     if(emailExists)
-        return res.send({ email: `Email already exists.`});
+        return res.send({ validation: `Email already exists.`});
 
     // Hashing the password
     // Generate salt for hashing
@@ -58,17 +58,17 @@ router.post('/login', async (req, res) => {
 
     // Query for entered user
     const user = await User.findOne({ email: req.body.email });
-    console.log(user);
+    
     // If user doesn't exist
     if(!user)
-        return res.send({ crendentials: `Wrong credentials.`});
+        return res.send({ validation: `Wrong credentials.`});
 
     // Check for entered password
     const validPassword = await bcrypt.compare(req.body.password, user.password);
 
     // Entered password was incorrect
     if(!validPassword)
-        return res.send({ crendentials: `Wrong credentials.`});
+        return res.send({ validation: `Wrong credentials.`});
 
     // Create and assign a JWT token
     const token = JWT.sign({ _id: user._id }, process.env.JWT_SECRET);
