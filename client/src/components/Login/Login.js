@@ -70,6 +70,7 @@ class Login extends Component {
 					<p className='text-warning'>{this.state.error}</p>
 					<div className='register-field'>
 						<TextField name='email' placeholder='email'
+						type='email'
 							onChange={e => this.change(e)}
 							value={this.state.email}/>
 					</div>
