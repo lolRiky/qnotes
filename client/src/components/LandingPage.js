@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 import { AppBar, Toolbar, IconButton, Typography, Button, makeStyles, Grid } from '@material-ui/core';
-import { Menu } from '@material-ui/icons';
 
 import Folder from './shared/SVG/Folder';
 
@@ -13,6 +12,7 @@ const useStyles = makeStyles(theme => ({
     margin: {
         marginRight: theme.spacing(2),
     },
+    toolbar: theme.mixins.toolbar,
     title: {
         flexGrow: 1
     },
@@ -26,11 +26,8 @@ const LandingPage = () => {
 
     return (
         <div>
-            <AppBar posittion='sticky' className={classes.root}>
+            <AppBar posittion='fixed' className={classes.root}>
                 <Toolbar>
-                    {/* <IconButton className={classes.margin} edge='start' color='inherit' aria-label='menu'>
-                        <Menu />
-                    </IconButton> */}
                     <Typography variant='h6' className={classes.title}>
                         QNotes
                     </Typography>
@@ -38,9 +35,9 @@ const LandingPage = () => {
                     <Button component={Link} to='/Register' color='inherit'>Register</Button>
                 </Toolbar>
             </AppBar>
-
+            <div className={classes.toolbar}></div>
             {/* Hero Section */}
-            <Grid container justify='space-evenly' alignItems='center' className={classes.main} wrap='wrap' className='h:sm-nowrap'>
+            <Grid container justify='space-evenly' alignItems='center' className={classes.main} className='h:sm-nowrap'>
                 <Grid item md={12} lg>
                     <div>
                         <Typography variant='h4' style={{ textAlign: 'center' }}>Want To Take Notes Quickly?</Typography>
@@ -52,16 +49,16 @@ const LandingPage = () => {
                 </Grid>
             </Grid>
             <div className='m24'></div>
-            <Grid container justify='center' alignItems='center' wrap='wrap'>
-                <Grid item xs={12} sm md={3} lg={3} className='p16 feature'>
+            <Grid container justify='center' alignItems='flex-start'>
+                <Grid item xs={12} sm md={3} lg={3} className='p16'>
                     <Typography variant='subtitle1'>Fast</Typography>
                     <Typography variant='body1'>Quickly take notes</Typography>
                 </Grid>
-                <Grid item xs={12} sm md={3} lg={3} className='p16 feature'>
+                <Grid item xs={12} sm md={3} lg={3} className='p16'>
                     <Typography variant='subtitle1'>Everything In One Place</Typography>
                     <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
                 </Grid>
-                <Grid item xs={12} sm md={3} lg={3} className='p16 feature'>
+                <Grid item xs={12} sm md={3} lg={3} className='p16'>
                     <Typography variant='subtitle1'>Organize</Typography>
                     <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
                 </Grid>
