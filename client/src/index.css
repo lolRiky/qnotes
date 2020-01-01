@@ -5,7 +5,8 @@ body {
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: rgb(238, 238, 238);
+    /* background: rgb(238, 238, 238); */
+    background: #f2f2f2;
 }
 body,html, #root {
     height: 100%;
@@ -21,6 +22,24 @@ code {
 header {
     position: sticky !important;
 }
+.flex {
+    display: flex;
+}
+.justifyCenter {
+    justify-content: center;
+}
+.p8 {
+    padding: 8px;
+}
+.p16 {
+    padding: 16px;
+}
+.feature{
+    /* max-width: 350px !important; */
+}
+.m24 {
+    margin: 28px;
+}
 h1,h2,h3,h4,h5,h6{margin:0;}
 
 .test1 {
@@ -31,4 +50,10 @@ h1,h2,h3,h4,h5,h6{margin:0;}
 }
 .test3 {
     background: blue;
+}
+
+@media only screen and (max-height: 400px) {
+    .h\:sm-noWrap{
+        flex-wrap: nowrap !important;
+    }
 }

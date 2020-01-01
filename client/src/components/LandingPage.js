@@ -40,7 +40,7 @@ const LandingPage = () => {
             </AppBar>
 
             {/* Hero Section */}
-            <Grid container justify='space-evenly' alignItems='center' className={classes.main}>
+            <Grid container justify='space-evenly' alignItems='center' className={classes.main} wrap='wrap' className='h:sm-nowrap'>
                 <Grid item md={12} lg>
                     <div>
                         <Typography variant='h4' style={{ textAlign: 'center' }}>Want To Take Notes Quickly?</Typography>
@@ -51,18 +51,18 @@ const LandingPage = () => {
                     <Folder style={mainSvg} />
                 </Grid>
             </Grid>
-
-            <Grid container justify='space-evenly' alignItems='center'>
-                <Grid item sm>
-                    <Typography variant='subtitle1'>Feature1</Typography>
+            <div className='m24'></div>
+            <Grid container justify='center' alignItems='center' wrap='wrap'>
+                <Grid item xs={12} sm md={3} lg={3} className='p16 feature'>
+                    <Typography variant='subtitle1'>Fast</Typography>
+                    <Typography variant='body1'>Quickly take notes</Typography>
+                </Grid>
+                <Grid item xs={12} sm md={3} lg={3} className='p16 feature'>
+                    <Typography variant='subtitle1'>Everything In One Place</Typography>
                     <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
                 </Grid>
-                <Grid item sm>
-                    <Typography variant='subtitle1'>Feature2</Typography>
-                    <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
-                </Grid>
-                <Grid item sm>
-                    <Typography variant='subtitle1'>Feature3</Typography>
+                <Grid item xs={12} sm md={3} lg={3} className='p16 feature'>
+                    <Typography variant='subtitle1'>Organize</Typography>
                     <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
                 </Grid>
             </Grid>
