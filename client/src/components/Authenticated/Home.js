@@ -18,20 +18,20 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column'
   },
   drawer: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: drawerWidth,
       flexShrink: 0,
     },
   },
   appBar: {
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'none',
     },
   },
@@ -40,7 +40,11 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
+    marginLeft: '0px',
+    [theme.breakpoints.up('md')]: {
+      marginLeft: drawerWidth,
+    },
   },
 }));
 
@@ -117,7 +121,7 @@ const Home = () => {
                         {drawer}
                     </Drawer>
                 </Hidden>
-                <Hidden xsDown implementation='css'>
+                <Hidden smDown implementation='css'>
                     <Drawer
                         classes={{
                             paper: classes.drawerPaper
@@ -131,7 +135,7 @@ const Home = () => {
             </nav>
 
             {/* Body */}
-            <main  className={classes.appBar}>
+            <main className={classes.content}>
                     <Typography paragraph>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
