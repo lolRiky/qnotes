@@ -47,6 +47,12 @@ const userSchema = mongoose.Schema({
             required: true,
         },
 
+        // Path to a note
+        path: {
+            type: String,
+            required: true
+        },
+
         createdAt: {
             type: Date,
             default: Date.now

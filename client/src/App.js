@@ -4,7 +4,7 @@ import LandingPage from './components/LandingPage';
 import AuthenticatedComponent from './components/AuthenticatedComponent';
 import Login from './components/Login/Login';
 import Protected from './components/Protected';
-import Home from './components/Authenticated/Home';
+import Home from './components/Authenticated/Home/Home';
 import Register from './components/Register/Register';
 
 function App() {

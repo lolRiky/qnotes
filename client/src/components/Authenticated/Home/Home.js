@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-import { Button, Typography, Hidden, Drawer, AppBar, Toolbar, IconButton } from '@material-ui/core';
+import { Typography, AppBar, Toolbar, IconButton,  makeStyles } from '@material-ui/core';
 
-import { Grid, makeStyles } from '@material-ui/core';
+import { Menu as MenuIcon } from '@material-ui/icons';
 
-// Remove when treeview will come
-import { List, ListItem, ListItemIcon, ListItemText, Divider } from '@material-ui/core';
-import { MoveToInbox as InboxIcon, Menu as MenuIcon } from '@material-ui/icons';
-
-import { logOut } from '../../helpers/jwt';
+import Drawer from './Drawer/Drawer';
 
 const drawerWidth = 240;
 
@@ -16,12 +12,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column'
-  },
-  drawer: {
-    [theme.breakpoints.up('md')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
   },
   appBar: {
     [theme.breakpoints.up('md')]: {
@@ -35,9 +25,6 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
-  drawerPaper: {
-    width: drawerWidth,
-  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(2),
@@ -46,6 +33,7 @@ const useStyles = makeStyles(theme => ({
       marginLeft: drawerWidth,
     },
   },
+
 }));
 
 const Home = () => {
@@ -55,32 +43,6 @@ const Home = () => {
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
-
-    // Body of Drawer/Navigation
-    const drawer = (
-        <div>
-            {/* TODO: Tree view of notes */}
-            <div>
-            <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MenuIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MenuIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-            </div>
-        </div>
-    );
 
     return (
         <div className={classes.root}>
@@ -96,43 +58,18 @@ const Home = () => {
                         <MenuIcon />
                     </IconButton>
                     <Typography varient='h6' noWrap>
-                        Responsive Drawer
+                        Notes
                     </Typography>
                 </Toolbar>
             </AppBar>
 
-            {/* Drawer/Navigation */}
-            <nav className={classes.drawer} aria-label='mailbox folders'>
-                <Hidden smUp implementation='css'>
-                    <Drawer
-                        // container={container}
-                        variant='temporary'
-                        anchor='left'
-                        open={mobileOpen}
-                        onClose={handleDrawerToggle}
-                        classes={{
-                            paper: classes.drawerPaper
-                        }}
-                        ModalProps={{
-                            // Better open performence on mobile
-                            keepMounted: true,
-                        }}
-                    >
-                        {drawer}
-                    </Drawer>
-                </Hidden>
-                <Hidden smDown implementation='css'>
-                    <Drawer
-                        classes={{
-                            paper: classes.drawerPaper
-                        }}
-                        variant='permanent'
-                        open
-                    >
-                        {drawer}
-                    </Drawer>
-                </Hidden>
-            </nav>
+            <Drawer className={classes.drawer}
+              classes={classes.drawerPaper}
+              mobileOpen={mobileOpen}
+              setMobileOpen={setMobileOpen}
+              handleDrawerToggle={handleDrawerToggle}
+              drawerWidth={drawerWidth}
+            />
 
             {/* Body */}
             <main className={classes.content}>
@@ -160,11 +97,6 @@ const Home = () => {
           accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
                     </Typography>
             </main>
-
-        {/* <Grid container>
-            <h1>User's home</h1>
-            <Button onClick={() => logOut()}>Log out</Button>
-        </Grid> */}
         </div>
     );
 
