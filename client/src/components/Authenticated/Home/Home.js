@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Typography, AppBar, Toolbar, IconButton,  makeStyles } from '@material-ui/core';
 
 import { Menu as MenuIcon } from '@material-ui/icons';
 
 import Drawer from './Drawer/Drawer';
+import Axios from 'axios';
+import { getJWT } from '../../../helpers/jwt';
 
 const drawerWidth = 240;
 
@@ -37,12 +39,23 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Home = () => {
+    const [notes, setNotes] = useState([{}]);
+
     const [mobileOpen, setMobileOpen] = useState(false);
     const classes = useStyles();
    
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+    
+    const fetchNotes = async () => {        
+      const fNotes = await Axios.get('/api/notes', { headers: { Authorization: getJWT() } } );
+      setNotes(fNotes.data);
+    };
+
+    useEffect(() => {
+      fetchNotes();
+    }, []);
 
     return (
         <div className={classes.root}>
@@ -85,6 +98,7 @@ const Home = () => {
           arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
           donec massa sapien faucibus et molestie ac.
                     </Typography>
+                    
                     <Typography paragraph>
                     Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
           facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
@@ -96,6 +110,10 @@ const Home = () => {
           nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
           accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
                     </Typography>
+
+                    {notes.map((note, index)=> {
+                      return <Typography key={index} paragraph>{note.title}</Typography>
+                    })}
             </main>
         </div>
     );

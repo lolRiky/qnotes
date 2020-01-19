@@ -1,14 +1,19 @@
 import React from 'react';
 
-import { Dialog, DialogTitle } from "@material-ui/core";
+import { Dialog as MatDialog, DialogTitle, Divider, DialogContent } from "@material-ui/core";
 
 const Dialog = (props) => {
 
     return (
-        <Dialog>
-            <DialogTitle>props.title</DialogTitle>
-            {props.children}
-        </Dialog>
+        <MatDialog
+         open={props.open}
+         onClose={props.onClose}>
+            <DialogTitle>{props.title}</DialogTitle>
+            <Divider />
+            <DialogContent>
+                {props.children}
+            </DialogContent>
+        </MatDialog>
     );
 
 }

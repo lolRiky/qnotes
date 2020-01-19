@@ -3,7 +3,7 @@ const JWT = require('jsonwebtoken');
 module.exports = (req, res, next) => {
     // Gets token
     const token = req.header('Authorization').split(' ')[1];
-
+    
     // They are not priviliged
     if(!token)
         res.status(401).send(`Access denied`);
