@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { AddCircleOutline } from '@material-ui/icons';
 import { getJWT } from '../../../../helpers/jwt';
 
+import { Autocomplete } from '@material-ui/lab';
 // Remove when treeview will come
 import { List, ListItem, ListItemIcon, ListItemText, 
     Divider, makeStyles, TextField, Button, 
@@ -28,11 +29,15 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
+const tags = ['No category', 'Work', 'Life', 'Personal', 'Business'];
+
 // Body of Drawer/Navigation
 const DrawerBody = () => {
 
     const [open, setOpen] = useState(false);
     const [path, setPath] = useState('');
+    const [desc, setDesc] = useState('');
+    const [tag, setTag] = useState('');
     const [title, setTitle] = useState('');
     
     const classes = useStyles();
@@ -47,8 +52,10 @@ const DrawerBody = () => {
 
     const newNote = async (e) => {
         e.preventDefault();
-        
-        const res = await axios.post('/api/notes', { path, title },  { headers: { Authorization: getJWT() } } );
+        console.log(path, title, desc, tag);
+        const res = await axios.post('/api/notes', { path, title, desc, tag },  { headers: { Authorization: getJWT() } } );
+         const { _id } = res.data;
+         console.log(_id);
     };
 
     return (
@@ -70,6 +77,18 @@ const DrawerBody = () => {
                             <TextField name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
+                            <TextField name='desc' onChange={e => setDesc(e.target.value)} value={desc} label='Content' fullWidth InputLabelProps={{
+                                shrink: true
+                            }}/>
+                            <Autocomplete
+                            onChange={e => setTag(e.target.value)} value={tag}
+                            options={tags}
+                            getOptionLabel={option => option}
+                            renderInput={params => (
+                                <TextField {...params} name='tag'  label='Tag' fullWidth InputLabelProps={{
+                                    shrink: true
+                                }}/>
+                            )}/>
                             <TextField name='path' onChange={e => setPath(e.target.value)} value={path} label='Path' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
