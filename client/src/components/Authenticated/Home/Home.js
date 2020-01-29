@@ -36,7 +36,11 @@ const useStyles = makeStyles(theme => ({
       marginLeft: drawerWidth,
     },
   },
-
+  note: {
+    maxWidth: 345,
+    width: '100%',
+    margin: theme.spacing(2)
+  }
 }));
 
 const Home = () => {
@@ -90,7 +94,7 @@ const Home = () => {
               <Grid container>
                 {notes.map((note, index)=> {
                   return (
-                    <Grid item key={index}>
+                    <Grid item key={index} className={classes.note}>
                       <Note key={index+0.5} note={note} />
                     </Grid>
                   )

@@ -81,9 +81,13 @@ const DrawerBody = () => {
                                 shrink: true
                             }}/>
                             <Autocomplete
-                            onChange={e => setTag(e.target.value)} value={tag}
+                            onChange={e => setTag(e.target.value)}
+                            // value={tag}
                             options={tags}
-                            getOptionLabel={option => option}
+                            getOptionLabel={(option) => {
+                                setTag(option);
+                                return option;
+                            }}
                             renderInput={params => (
                                 <TextField {...params} name='tag'  label='Tag' fullWidth InputLabelProps={{
                                     shrink: true
