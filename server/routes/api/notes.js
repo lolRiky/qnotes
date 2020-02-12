@@ -22,8 +22,32 @@ router.post('/', verify, async (req, res) => {
     // Save note
     const saveddbUser = await dbUser.save();
 
-    const latest = saveddbUser.notes[saveddbUser.notes.length - 1];
-    res.send(latest);
+    // Get the latest note
+    // const latest = saveddbUser.notes[saveddbUser.notes.length - 1];
+    // res.send(latest);
+    
+    res.sendStatus(201);
+});
+
+router.post('/delete', verify, async (req, res) => {
+    
+    // Get user and body with note id
+    const { body, user } = req;
+    
+    // Get the user
+    const dbUser = await User.findById(user._id);
+
+    // Desired note will be filtered out
+    const notes = await dbUser.notes.filter(x => x._id != body.id);
+
+    // Replace notes
+    dbUser.notes = notes;
+
+    // Save the user
+    const saveddbUser = await dbUser.save();
+    
+    // Everything went fine
+    res.status(200);
 });
 
 router.get('/', verify, async (req, res) => {

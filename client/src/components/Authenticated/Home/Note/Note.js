@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import { Card, CardHeader, CardContent, CardActions, makeStyles, IconButton } from '@material-ui/core';
+import { Card, CardHeader, CardContent, CardActions, makeStyles, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { MoreVert } from '@material-ui/icons';
+import Axios from 'axios';
+import { getJWT } from '../../../../helpers/jwt';
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -11,7 +13,24 @@ const useStyles = makeStyles(theme => ({
 
 const Note = ({note}) => {
 
+    const [el, setEl] = useState(null);
     const classes = useStyles();
+
+    const handleClose = (e) => {
+        setEl(null);
+    }
+
+    const openNote = () => {
+        alert('openNote');
+    }
+
+    const deleteNote = async () => {
+        const id = note._id;
+        
+        console.log(id);
+        const res = await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
+        console.log(res);
+    }
 
     return (
         <Card className={classes.card}>
@@ -19,9 +38,20 @@ const Note = ({note}) => {
             title={note.title} 
             subheader={new Date(note.createdAt).toDateString()}
             action={
-                <IconButton aria-label='settings'>
-                    <MoreVert />
-                </IconButton>
+                <React.Fragment>
+                    <IconButton aria-label='settings' onClick={(e) => setEl(e.currentTarget)}>
+                        <MoreVert />
+                    </IconButton>
+                    <Menu
+                    anchorEl={el}
+                    keepMounted
+                    open={Boolean(el)}
+                    onClose={handleClose}>
+                        {/* TODO: Add icons */}
+                        <MenuItem onClick={openNote}>Open</MenuItem>
+                        <MenuItem onClick={deleteNote}>Delete</MenuItem>
+                    </Menu>
+                </React.Fragment>
             }
             >
             </CardHeader>

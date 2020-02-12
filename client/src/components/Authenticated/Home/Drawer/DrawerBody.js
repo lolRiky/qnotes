@@ -52,10 +52,8 @@ const DrawerBody = () => {
 
     const newNote = async (e) => {
         e.preventDefault();
-        console.log(path, title, desc, tag);
-        const res = await axios.post('/api/notes', { path, title, desc, tag },  { headers: { Authorization: getJWT() } } );
-         const { _id } = res.data;
-         console.log(_id);
+        
+        await axios.post('/api/notes', { path, title, desc, tag },  { headers: { Authorization: getJWT() } } );
     };
 
     return (
