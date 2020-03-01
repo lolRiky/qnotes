@@ -21,12 +21,24 @@ router.post('/', verify, async (req, res) => {
 
     // Save note
     const saveddbUser = await dbUser.save();
-
-    // Get the latest note
-    // const latest = saveddbUser.notes[saveddbUser.notes.length - 1];
-    // res.send(latest);
     
     res.sendStatus(201);
+});
+
+router.post('/check', verify, async (req, res) => {
+    
+    const { body: { id }, user } = req;
+
+    const dbUser = await User.findById(user._id);
+
+    dbUser.notes.forEach(note => {
+        if(note._id == id)
+            note.check = !note.check
+    });
+
+    await dbUser.save();
+
+    res.sendStatus(200);
 });
 
 router.post('/delete', verify, async (req, res) => {

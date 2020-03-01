@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const tags = ['No category', 'Work', 'Life', 'Personal', 'Business'];
+const tags = ['No category', 'School', 'Work', 'Life', 'Personal', 'Business'];
 
 // Body of Drawer/Navigation
 const DrawerBody = () => {
@@ -53,7 +53,13 @@ const DrawerBody = () => {
     const newNote = async (e) => {
         e.preventDefault();
         
-        await axios.post('/api/notes', { path, title, desc, tag },  { headers: { Authorization: getJWT() } } );
+        try {
+            await axios.post('/api/notes', { path, title, desc, tag },  { headers: { Authorization: getJWT() } } );
+        } catch(err) {
+            alert('Please try again later');
+        }
+        
+
     };
 
     return (
@@ -75,7 +81,7 @@ const DrawerBody = () => {
                             <TextField name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
-                            <TextField name='desc' onChange={e => setDesc(e.target.value)} value={desc} label='Content' fullWidth InputLabelProps={{
+                            <TextField name='desc' onChange={e => setDesc(e.target.value)} value={desc} multiline={true} rows='8' label='Content' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
                             <Autocomplete

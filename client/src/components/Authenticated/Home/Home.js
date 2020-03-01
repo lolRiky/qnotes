@@ -37,14 +37,15 @@ const useStyles = makeStyles(theme => ({
     },
   },
   note: {
-    maxWidth: 345,
+    maxWidth: 297,
     width: '100%',
-    margin: theme.spacing(2)
+    margin: theme.spacing(2),
+    wordWrap: "break-word"
   }
 }));
 
 const Home = () => {
-    const [notes, setNotes] = useState([{}]);
+    const [notes, setNotes] = useState([]);
 
     const [mobileOpen, setMobileOpen] = useState(false);
     const classes = useStyles();
@@ -61,6 +62,32 @@ const Home = () => {
     useEffect(() => {
       fetchNotes();
     }, []);
+
+    const deleteNote = async (id) => {
+      try {
+          const filtered = notes.filter(x => x._id !== id);
+          setNotes(filtered);
+          await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
+      } catch (e) {
+          alert(`Oops error, please try again later \n${e}`);
+      }
+    }
+
+    const checkNote = async (id) => {
+      const notesCopy = [...notes];
+      
+      notesCopy.forEach(note => {
+        if(note._id === id)
+          note.check = !note.check;
+      });
+
+      try {
+          await Axios.post('/api/notes/check', { id }, { headers: { Authorization: getJWT() } } );
+      } catch (e) {
+          alert(`Oops error, please try again later.\n${e}`);
+      }
+
+    }
 
     return (
         <div className={classes.root}>
@@ -87,6 +114,7 @@ const Home = () => {
               setMobileOpen={setMobileOpen}
               handleDrawerToggle={handleDrawerToggle}
               drawerWidth={drawerWidth}
+
             />
 
             {/* Body */}
@@ -95,7 +123,9 @@ const Home = () => {
                 {notes.map((note, index)=> {
                   return (
                     <Grid item key={index} className={classes.note}>
-                      <Note key={index+0.5} note={note} />
+                      <Note key={index+0.5} note={note} 
+                      deleteNote={deleteNote}
+                      checkNote={checkNote}/>
                     </Grid>
                   )
                 })}
