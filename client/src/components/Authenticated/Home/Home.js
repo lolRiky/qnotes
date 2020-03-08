@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-import { Typography, AppBar, Toolbar, IconButton,  makeStyles, Grid } from '@material-ui/core';
+import { IconButton,  makeStyles, Grid, InputBase, fade, Menu, MenuItem, Badge } from '@material-ui/core';
 
-import { Menu as MenuIcon } from '@material-ui/icons';
+import { Menu as MenuIcon, Search as SearchIcon, Mail as MailIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
 
 import Drawer from './Drawer/Drawer';
 import Axios from 'axios';
 import { getJWT } from '../../../helpers/jwt';
 import Note from './Note/Note';
+import Topbar from './Topbar';
 
 const drawerWidth = 240;
 
@@ -15,18 +16,6 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column'
-  },
-  appBar: {
-    [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
   },
   content: {
     flexGrow: 1,
@@ -41,22 +30,34 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     margin: theme.spacing(2),
     wordWrap: "break-word"
-  }
+  },
+
 }));
 
 const Home = () => {
     const [notes, setNotes] = useState([]);
-
+    const [pernamentNotes, setPernamentNotes] = useState([]);
     const [mobileOpen, setMobileOpen] = useState(false);
+
     const classes = useStyles();
    
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-    
+    const searchNotes = (term) => {
+      if(term === '') {
+        setNotes(pernamentNotes);
+      } else {
+        const filtered = pernamentNotes.filter(x => x.desc.toLowerCase().includes(term.toLowerCase()) || x.title.toLowerCase().includes(term.toLowerCase()));
+        setNotes(filtered);
+      }
+    }
+
     const fetchNotes = async () => {        
       const fNotes = await Axios.get('/api/notes', { headers: { Authorization: getJWT() } } );
       setNotes(fNotes.data);
+      setPernamentNotes(fNotes.data);
+    };
+
+    const handleDrawerToggle = () => {
+      setMobileOpen(!mobileOpen);
     };
 
     useEffect(() => {
@@ -91,22 +92,7 @@ const Home = () => {
 
     return (
         <div className={classes.root}>
-            <AppBar position='fixed' className={classes.appBar}>
-                <Toolbar>
-                    <IconButton
-                        color='inherit'
-                        aria-label='open drawer'
-                        edge='start'
-                        onClick={handleDrawerToggle}
-                        className={classes.menuButton}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography varient='h6' noWrap>
-                        Notes
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+            <Topbar handleDrawerToggle={handleDrawerToggle} drawerWidth={drawerWidth} searchNotes={searchNotes}/>
 
             <Drawer className={classes.drawer}
               classes={classes.drawerPaper}
