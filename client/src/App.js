@@ -6,6 +6,7 @@ import Login from './components/Login/Login';
 import Protected from './components/Protected';
 import Home from './components/Authenticated/Home/Home';
 import Register from './components/Register/Register';
+import EditeNote from './components/Authenticated/Home/Note/EditNote';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           
           {/* Users Home */}
           <Route path='/Home' component={Home} />
+          <Route path='/note/:noteId' component={EditeNote} />
         </AuthenticatedComponent>
       
       </Switch>

@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   note: {
-    maxWidth: 297,
+    maxWidth: 290,
     width: '100%',
     margin: theme.spacing(2),
     wordWrap: "break-word"
@@ -50,6 +50,53 @@ const Home = () => {
       }
     }
 
+    const deleteNote = async (id) => {
+      try {
+          const filtered = notes.filter(x => x._id !== id);
+          setNotes(filtered);
+          await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
+      } catch (e) {
+          alert(`Oops error, please try again later \n${e}`);
+      }
+    }
+
+    const checkNote = async (id) => {
+      try {
+          const res = await Axios.post('/api/notes/check', { id }, { headers: { Authorization: getJWT() } } );
+
+          // Fix here
+          if(res.status === 200) {
+            notes.forEach(note => {
+              if(note._id === id)
+                note.check = !note.check;
+            });
+          }
+      } catch (e) {
+          alert(`Oops error, please try again later.\n${e}`);
+      }
+    }
+
+    const saveEditNoteHandle = async (id, newDesc) => {
+      try {
+        const res = await Axios.post('/api/notes/save', {id, newDesc },  { headers: { Authorization: getJWT() } })
+
+        if(res.status === 200) {
+
+          const cpNotes = [...pernamentNotes];
+
+          cpNotes.forEach(cpNote => {
+            if(cpNote._id === id)
+            {
+              cpNote.desc = newDesc;
+            }
+          });
+          console.log(cpNotes);
+        }
+      } catch (e) {
+          console.log(`Error Save Handle: ${e}`);
+      }
+    }
+
     const fetchNotes = async () => {        
       const fNotes = await Axios.get('/api/notes', { headers: { Authorization: getJWT() } } );
       setNotes(fNotes.data);
@@ -64,32 +111,6 @@ const Home = () => {
       fetchNotes();
     }, []);
 
-    const deleteNote = async (id) => {
-      try {
-          const filtered = notes.filter(x => x._id !== id);
-          setNotes(filtered);
-          await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
-      } catch (e) {
-          alert(`Oops error, please try again later \n${e}`);
-      }
-    }
-
-    const checkNote = async (id) => {
-      const notesCopy = [...notes];
-      
-      notesCopy.forEach(note => {
-        if(note._id === id)
-          note.check = !note.check;
-      });
-
-      try {
-          await Axios.post('/api/notes/check', { id }, { headers: { Authorization: getJWT() } } );
-      } catch (e) {
-          alert(`Oops error, please try again later.\n${e}`);
-      }
-
-    }
-
     return (
         <div className={classes.root}>
             <Topbar handleDrawerToggle={handleDrawerToggle} drawerWidth={drawerWidth} searchNotes={searchNotes}/>
@@ -97,10 +118,8 @@ const Home = () => {
             <Drawer className={classes.drawer}
               classes={classes.drawerPaper}
               mobileOpen={mobileOpen}
-              setMobileOpen={setMobileOpen}
               handleDrawerToggle={handleDrawerToggle}
               drawerWidth={drawerWidth}
-
             />
 
             {/* Body */}
@@ -111,7 +130,8 @@ const Home = () => {
                     <Grid item key={index} className={classes.note}>
                       <Note key={index+0.5} note={note} 
                       deleteNote={deleteNote}
-                      checkNote={checkNote}/>
+                      checkNote={checkNote}
+                      saveEditNoteHandle={saveEditNoteHandle} />
                     </Grid>
                   )
                 })}

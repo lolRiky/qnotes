@@ -41,6 +41,18 @@ router.post('/check', verify, async (req, res) => {
     res.sendStatus(200);
 });
 
+router.post('/save', verify, async(req, res) => {
+    // Get user and body with note id
+    const { body, user } = req;
+
+    // Get the user
+    const dbUser = await User.findById(user._id);
+
+    console.log(body);
+
+    res.sendStatus(200);
+});
+
 router.post('/delete', verify, async (req, res) => {
     
     // Get user and body with note id

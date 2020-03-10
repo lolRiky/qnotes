@@ -10,6 +10,7 @@ const useStyles = makeStyles(theme => ({
       width: `calc(100% - ${props.drawerWidth}px)`,
       marginLeft: props.drawerWidth,
     },
+    position: 'fixed !important'
   }),
   menuButton: {
     marginRight: theme.spacing(2),
@@ -162,7 +163,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
 
   return (
       <div>
-          <AppBar position='fixed' className={classes.appBar}>
+          <AppBar position='sticky' className={classes.appBar}>
               <Toolbar>
                   <IconButton
                       color='inherit'
@@ -228,6 +229,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
           </AppBar>
           {renderMobileMenu}
           {renderMenu}
+          <Toolbar/>
       </div>
   );
 };

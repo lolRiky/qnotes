@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 
 import './note.css';
 
-import { Card, CardHeader, CardContent, makeStyles, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { Card, CardHeader, CardContent, makeStyles, IconButton, Menu, MenuItem, useMediaQuery, useTheme } from '@material-ui/core';
 import { MoreVert, Delete as DeleteIcon, OpenInNew as OpenInNewIcon, Check as CheckIcon } from '@material-ui/icons';
+import EditNote from './EditNote';
+import Axios from 'axios';
+import { getJWT } from '../../../../helpers/jwt';
 
 const useStyles = makeStyles(theme => ({
     card: props => ({
         background: props.background
-    })
+    }),
 }));
 
 /* 
@@ -18,10 +21,14 @@ blue: 17, 166, 232
 green: 60, 205, 66
 red: rgba(255, 10, 0, 0.74)
 */
-const Note = ({note, deleteNote, checkNote}) => {
+const Note = ({note, deleteNote, checkNote, saveEditNoteHandle}) => {
 
     const [el, setEl] = useState(null);
     const [color, setColor] = useState('');
+
+    const [openEditNote, setOpenEditNote] = useState(false);
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const classes = useStyles({background: color});
 
@@ -29,8 +36,13 @@ const Note = ({note, deleteNote, checkNote}) => {
         setEl(null);
     }
 
-    const openNote = () => {
-        alert('openNote');
+    const openEditNoteHandle = () => {
+        setEl(null);
+        setOpenEditNote(true);
+    }
+    
+    const closeEditNoteHandle = () => {
+        setOpenEditNote(false);
     }
 
     useEffect(() => {
@@ -66,36 +78,45 @@ const Note = ({note, deleteNote, checkNote}) => {
     }, []);
 
     return (
-        // <Card className={`note note-${note.tag}`}>
-        <Card className={classes.card}>
-            <CardHeader 
-            title={note.title} 
-            subheader={new Date(note.createdAt).toDateString()}
-            action={
-                <React.Fragment>
-                    {note.check ? <CheckIcon /> : <script />}
-                    <IconButton aria-label='settings' onClick={(e) => setEl(e.currentTarget)}>
-                        <MoreVert />
-                    </IconButton>
-                    <Menu
-                    anchorEl={el}
-                    keepMounted
-                    open={Boolean(el)}
-                    onClose={handleClose}>
-                        <MenuItem onClick={openNote}><OpenInNewIcon /> Open</MenuItem>
-                        <MenuItem onClick={ () => { checkNote(note._id); setEl(null); }}><CheckIcon /> Check</MenuItem>
-                        <MenuItem onClick={ () => { deleteNote(note._id); setEl(null); }}><DeleteIcon /> Delete</MenuItem>
-                    </Menu>
-                </React.Fragment>
-            }
-            >
-            </CardHeader>
-            <CardContent>
-                {note.desc.split('\n').map((line, index) => {
-                    return <p key={index}>{line}</p>;
-                })}
-            </CardContent>
-        </Card>
+        <Fragment>
+            <Card className={classes.card}>
+                <CardHeader 
+                title={note.title} 
+                subheader={new Date(note.createdAt).toDateString()}
+                action={
+                    <React.Fragment>
+                        {note.check ? <CheckIcon /> : <script />}
+                        <IconButton aria-label='settings' onClick={(e) => setEl(e.currentTarget)}>
+                            <MoreVert />
+                        </IconButton>
+                        <Menu
+                        anchorEl={el}
+                        keepMounted
+                        open={Boolean(el)}
+                        onClose={handleClose}>
+                            <MenuItem onClick={openEditNoteHandle}><OpenInNewIcon /> Open</MenuItem>
+                            <MenuItem onClick={ () => { checkNote(note._id); setEl(null); }}><CheckIcon /> {note.check ? "Uncheck" : "Check"}</MenuItem>
+                            <MenuItem onClick={ () => { deleteNote(note._id); setEl(null); }}><DeleteIcon /> Delete</MenuItem>
+                        </Menu>
+                    </React.Fragment>
+                }
+                >
+                </CardHeader>
+                <CardContent>
+                    {note.desc.split('\n').map((line, index) => {
+                        return <p key={index}>{line}</p>;
+                    })}
+                </CardContent>
+            </Card>
+
+            <EditNote fullScreen={fullScreen}
+            open={openEditNote} 
+            closeEditNoteHandle={closeEditNoteHandle}
+            saveEditNoteHandle={saveEditNoteHandle}
+            note={note}
+            />
+            
+        </Fragment>
     );
 };
 

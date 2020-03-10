@@ -37,6 +37,32 @@ header {
 .m24 {
     margin: 28px;
 }
+    textarea
+    {
+        border: 1px solid #EEEEEE;
+        box-shadow: 1px 1px 0 #DDDDDD;
+        display: block;
+        font-family: 'Marck Script',cursive;
+        font-size: 22px;
+        line-height: 50px;
+        margin: 2% auto;
+        padding: 8px 8px 8px 8px;
+        resize: none;
+        height: 300px;
+        width: 530px;
+
+ background-image: -webkit-linear-gradient(top , transparent, transparent 49px,#E7EFF8 0);
+        -webkit-background-size:  100% 50px;
+        background-size: 100% 50px;
+    }
+html body div.MuiDialog-root.responsive-dialog-title div.MuiDialog-container.MuiDialog-scrollPaper div.MuiPaper-root.MuiDialog-paper.MuiDialog-paperScrollPaper.MuiDialog-paperWidthSm.MuiPaper-elevation24.MuiPaper-rounded{
+    width: 600px;
+}
+@media only screen and (max-height: 960px) {
+html body div.MuiDialog-root.responsive-dialog-title div.MuiDialog-container.MuiDialog-scrollPaper div.MuiPaper-root.MuiDialog-paper.MuiDialog-paperScrollPaper.MuiDialog-paperWidthSm.MuiPaper-elevation24.MuiPaper-rounded{
+    width: 100%;
+}
+}
 @media only screen and (max-height: 400px) {
     .h\:sm-noWrap{
         flex-wrap: nowrap !important;
