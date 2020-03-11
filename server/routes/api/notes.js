@@ -1,12 +1,13 @@
 const router = require('express').Router();
 
 const User = require('../../database/models/user');
+const { registerValidation, loginValidation } = require('../../validators/user');
 const verify = require('../../validators/verifyToken');
 
 router.post('/', verify, async (req, res) => {
     
     // Get post data and user
-    const { body: { title, path, desc, tag}, user } = req;
+    const { body: { title, path, desc, tag, remindDate }, user } = req;
 
     // Fetch the usser
     const dbUser = await User.findById(user._id);
@@ -16,7 +17,8 @@ router.post('/', verify, async (req, res) => {
         title: title,
         desc: desc,
         tag: tag,
-        path: path
+        path: path,
+        remindDate: remindDate
     });
 
     // Save note
@@ -43,13 +45,20 @@ router.post('/check', verify, async (req, res) => {
 
 router.post('/save', verify, async(req, res) => {
     // Get user and body with note id
-    const { body, user } = req;
+    const { body: { id, newDesc }, user } = req;
+
+    if(!id || !newDesc)
+        res.send({ validation: 'Bad body' });
 
     // Get the user
     const dbUser = await User.findById(user._id);
 
-    console.log(body);
+    dbUser.notes.forEach(note => {
+        if(note._id == id)
+            return note.desc = newDesc;
+    })
 
+    await dbUser.save();
     res.sendStatus(200);
 });
 

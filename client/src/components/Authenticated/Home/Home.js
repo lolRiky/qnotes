@@ -52,8 +52,8 @@ const Home = () => {
 
     const deleteNote = async (id) => {
       try {
-          const filtered = notes.filter(x => x._id !== id);
-          setNotes(filtered);
+          const filtered = pernamentNotes.filter(x => x._id !== id);
+          setPernamentNotes(filtered);
           await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
       } catch (e) {
           alert(`Oops error, please try again later \n${e}`);
@@ -64,13 +64,10 @@ const Home = () => {
       try {
           const res = await Axios.post('/api/notes/check', { id }, { headers: { Authorization: getJWT() } } );
 
-          // Fix here
-          if(res.status === 200) {
-            notes.forEach(note => {
-              if(note._id === id)
-                note.check = !note.check;
-            });
-          }
+          if(res.status === 200) 
+            setPernamentNotes(pernamentNotes.map(item => item._id === id ? {...item, check: !item.check} : item));
+          else if(res.data.validation)
+            alert('Invalid data');
       } catch (e) {
           alert(`Oops error, please try again later.\n${e}`);
       }
@@ -78,20 +75,9 @@ const Home = () => {
 
     const saveEditNoteHandle = async (id, newDesc) => {
       try {
-        const res = await Axios.post('/api/notes/save', {id, newDesc },  { headers: { Authorization: getJWT() } })
-
-        if(res.status === 200) {
-
-          const cpNotes = [...pernamentNotes];
-
-          cpNotes.forEach(cpNote => {
-            if(cpNote._id === id)
-            {
-              cpNote.desc = newDesc;
-            }
-          });
-          console.log(cpNotes);
-        }
+        const res = await Axios.post('/api/notes/save', { id, newDesc },  { headers: { Authorization: getJWT() } })
+        if(res.status === 200) 
+          setPernamentNotes(pernamentNotes.map(item => item._id === id ? {...item, desc: newDesc} : item));
       } catch (e) {
           console.log(`Error Save Handle: ${e}`);
       }
@@ -99,7 +85,6 @@ const Home = () => {
 
     const fetchNotes = async () => {        
       const fNotes = await Axios.get('/api/notes', { headers: { Authorization: getJWT() } } );
-      setNotes(fNotes.data);
       setPernamentNotes(fNotes.data);
     };
 
@@ -111,9 +96,13 @@ const Home = () => {
       fetchNotes();
     }, []);
 
+    useEffect(() => {
+      setNotes(pernamentNotes);
+    }, [pernamentNotes]);
+
     return (
         <div className={classes.root}>
-            <Topbar handleDrawerToggle={handleDrawerToggle} drawerWidth={drawerWidth} searchNotes={searchNotes}/>
+            <Topbar notes={pernamentNotes} handleDrawerToggle={handleDrawerToggle} drawerWidth={drawerWidth} searchNotes={searchNotes}/>
 
             <Drawer className={classes.drawer}
               classes={classes.drawerPaper}
@@ -125,7 +114,7 @@ const Home = () => {
             {/* Body */}
             <main className={classes.content}>
               <Grid container>
-                {notes.map((note, index)=> {
+                {pernamentNotes.map((note, index)=> {
                   return (
                     <Grid item key={index} className={classes.note}>
                       <Note key={index+0.5} note={note} 

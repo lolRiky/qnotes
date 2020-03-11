@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { AddCircleOutline } from '@material-ui/icons';
 import { getJWT } from '../../../../helpers/jwt';
@@ -37,6 +37,7 @@ const DrawerBody = () => {
     const [open, setOpen] = useState(false);
     const [path, setPath] = useState('');
     const [desc, setDesc] = useState('');
+    const [remindDate, setRemindDate] = useState(Date);
     const [tag, setTag] = useState('');
     const [title, setTitle] = useState('');
     
@@ -52,15 +53,18 @@ const DrawerBody = () => {
 
     const newNote = async (e) => {
         e.preventDefault();
-        
+        if(!path || !desc || !remindDate || !tag || !title)
+            return alert('Please fill all information');
         try {
-            await axios.post('/api/notes', { path, title, desc, tag },  { headers: { Authorization: getJWT() } } );
+            await axios.post('/api/notes', { path, title, desc, remindDate, tag },  { headers: { Authorization: getJWT() } } );
         } catch(err) {
             alert('Please try again later');
         }
-        
-
     };
+
+    useEffect(() => {
+        setPath(`${tag}/`);
+    }, [tag]);
 
     return (
         <div className={classes.drawerLayout}>
@@ -84,9 +88,11 @@ const DrawerBody = () => {
                             <TextField name='desc' onChange={e => setDesc(e.target.value)} value={desc} multiline={true} rows='8' label='Content' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
+                            <TextField name='remindDate' onChange={e => setRemindDate(e.target.value)} type='date' value={remindDate} label='Date to get reminded' fullWidth InputLabelProps={{
+                                shrink: true
+                            }}/>
                             <Autocomplete
                             onChange={e => setTag(e.target.value)}
-                            // value={tag}
                             options={tags}
                             getOptionLabel={(option) => {
                                 setTag(option);

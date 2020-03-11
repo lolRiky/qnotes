@@ -34,13 +34,11 @@ const userSchema = mongoose.Schema({
             required: true,
             max: 128
         },
+
         desc: {
             type: String,
             max: 256
         },
-        
-        // CONSIDER: Array of tags perhaps?
-        // if Create ENUM and validate
 
         tag: {
             type: String,
@@ -61,6 +59,11 @@ const userSchema = mongoose.Schema({
         createdAt: {
             type: Date,
             default: Date.now
+        },
+
+        remindDate: {
+            type: Date,
+            required: true
         }
 
     }]

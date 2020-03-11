@@ -1,7 +1,7 @@
 import React, { Component, useState } from 'react';
 
 import { Typography, AppBar, Toolbar, makeStyles, IconButton, InputBase, Badge, Menu, MenuItem, fade} from '@material-ui/core';
-import { Menu as MenuIcon, Search as SearchIcon, Mail as MailIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
+import { Menu as MenuIcon, Search as SearchIcon, EventNote as EventNoteIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
 
 
 const useStyles = makeStyles(theme => ({
@@ -76,7 +76,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
+const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
@@ -102,6 +102,19 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const notifHandle = () => {
+    const today = new Date().getDate();
+    
+    const notifNotes = notes.filter(note => {
+      const noteDate = new Date(note.remindDate).getDate();
+      const result = noteDate - 7;
+      if(today >= result)
+        return note;
+    });
+
+    console.log(notifNotes);
+  }
+
   // Menu
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -115,7 +128,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
     </Menu>
   );
 
@@ -132,15 +145,15 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
+        <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">
-            <MailIcon />
+            <EventNoteIcon />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Calendar</p>
       </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
+      <MenuItem onClick={notifHandle}>
+        <IconButton color="inherit">
           <Badge badgeContent={11} color="secondary">
             <NotificationsIcon />
           </Badge>
@@ -193,12 +206,12 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes}) => {
                   </div>
                   <div className={classes.grow} />
                   <div className={classes.sectionDesktop}>
-                    <IconButton aria-label="show 4 new mails" color="inherit">
+                    <IconButton color="inherit">
                       <Badge badgeContent={4} color="secondary">
-                        <MailIcon />
+                        <EventNoteIcon />
                       </Badge>
                     </IconButton>
-                    <IconButton aria-label="show 17 new notifications" color="inherit">
+                    <IconButton color="inherit">
                       <Badge badgeContent={17} color="secondary">
                         <NotificationsIcon />
                       </Badge>
