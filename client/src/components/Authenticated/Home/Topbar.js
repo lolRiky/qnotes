@@ -1,7 +1,8 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 
 import { Typography, AppBar, Toolbar, makeStyles, IconButton, InputBase, Badge, Menu, MenuItem, fade} from '@material-ui/core';
 import { Menu as MenuIcon, Search as SearchIcon, EventNote as EventNoteIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
+import MenuNote from './Note/MenuNote';
 
 
 const useStyles = makeStyles(theme => ({
@@ -74,16 +75,22 @@ const useStyles = makeStyles(theme => ({
       display: 'none',
     },
   },
+  menuNorm: {
+    padding: 0
+  }
 }));
 
 const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [notifEl, setNotifEl] = useState(null);
 
+  const [weekNotes, setWeekNotes] = useState([]);
   const classes = useStyles({drawerWidth: drawerWidth});
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isNotifMenuOpen = Boolean(notifEl);
 
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -102,7 +109,15 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const notifHandle = () => {
+  const handleNotifMenuOpen = event => {
+    setNotifEl(event.currentTarget);
+  }
+
+  const handleNotifMenuClose = event => {
+    setNotifEl(null);
+  }
+
+  useEffect(() => {
     const today = new Date().getDate();
     
     const notifNotes = notes.filter(note => {
@@ -111,9 +126,27 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
       if(today >= result)
         return note;
     });
+    
+    setWeekNotes(notifNotes);
+  }, [notes]);
 
-    console.log(notifNotes);
-  }
+  // Notification Menu
+  const notifMenu = (
+    <Menu
+    anchorEl={notifEl}
+    anchorOrigin={{ vertical: 'top', horizontal: 'right'}}
+    keepMounted
+    transformOrigin={{ vertical: 'top', horizontal: 'right'}}
+    open={isNotifMenuOpen}
+    onClose={handleNotifMenuClose}
+    >
+      {weekNotes.map((weekNote, index) => {
+        return <MenuItem key={index} className={classes.menuNorm}>
+          <MenuNote title={weekNote.title} desc={weekNote.desc} />
+        </MenuItem>
+      })}
+    </Menu>
+  );
 
   // Menu
   const menuId = 'primary-search-account-menu';
@@ -152,9 +185,9 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
         </IconButton>
         <p>Calendar</p>
       </MenuItem>
-      <MenuItem onClick={notifHandle}>
+      <MenuItem onClick={handleNotifMenuOpen}>
         <IconButton color="inherit">
-          <Badge badgeContent={11} color="secondary">
+          <Badge badgeContent={weekNotes.length} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -242,6 +275,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
           </AppBar>
           {renderMobileMenu}
           {renderMenu}
+          {notifMenu}
           <Toolbar/>
       </div>
   );
