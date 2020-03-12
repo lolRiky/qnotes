@@ -26,7 +26,7 @@ const MenuNote = ({title, desc}) => {
             <div className={classes.details}>
                 <CardContent className={classes.content}>
                     <Typography component='h5' variant='h5'>{title}</Typography>
-                    <Typography component='subtitle1' color='textSecondary'>{title}</Typography>
+                    <Typography variant='subtitle1' color='textSecondary'>{title}</Typography>
                 </CardContent>
             </div>
         </Card>
