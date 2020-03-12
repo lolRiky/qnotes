@@ -24,7 +24,8 @@ router.post('/', verify, async (req, res) => {
     // Save note
     const saveddbUser = await dbUser.save();
     
-    res.sendStatus(201);
+    // Return successfully created note id
+    res.send(saveddbUser.notes[saveddbUser.notes.length-1]._id);
 });
 
 router.post('/check', verify, async (req, res) => {

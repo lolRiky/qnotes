@@ -3,6 +3,8 @@ import React, { Component, useState, useEffect } from 'react';
 import { Typography, AppBar, Toolbar, makeStyles, IconButton, InputBase, Badge, Menu, MenuItem, fade} from '@material-ui/core';
 import { Menu as MenuIcon, Search as SearchIcon, EventNote as EventNoteIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
 import MenuNote from './Note/MenuNote';
+import LogOut from '../../shared/LogOut';
+import { logOut } from '../../../helpers/jwt';
 
 
 const useStyles = makeStyles(theme => ({
@@ -161,7 +163,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+      <MenuItem onClick={logOut}>Logout</MenuItem>
     </Menu>
   );
 

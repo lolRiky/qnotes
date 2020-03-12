@@ -50,6 +50,22 @@ const Home = () => {
       }
     }
 
+  const newNote = async (path, desc, remindDate, tag, title) => {
+      if(!path || !desc || !remindDate || !tag || !title)
+          return alert('Please fill all information');
+      try {
+          const res = await Axios.post('/api/notes', { path, title, desc, remindDate, tag },  { headers: { Authorization: getJWT() } } );
+          
+          if(res.request.status === 200 && res.data)
+            console.log(res.data);
+
+          setPernamentNotes([...pernamentNotes, {_id: res.data, path, desc, remindDate, tag, title}]);
+
+      } catch(err) {
+          alert('Please try again later');
+      }
+  }
+
     const deleteNote = async (id) => {
       try {
           const filtered = pernamentNotes.filter(x => x._id !== id);
@@ -109,8 +125,9 @@ const Home = () => {
               mobileOpen={mobileOpen}
               handleDrawerToggle={handleDrawerToggle}
               drawerWidth={drawerWidth}
+              newNote={newNote}
             />
-
+            <button onClick={() => console.log(pernamentNotes)}>log</button>
             {/* Body */}
             <main className={classes.content}>
               <Grid container>

@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
 const tags = ['No category', 'School', 'Work', 'Life', 'Personal', 'Business'];
 
 // Body of Drawer/Navigation
-const DrawerBody = () => {
+const DrawerBody = ({ newNote }) => {
 
     const [open, setOpen] = useState(false);
     const [path, setPath] = useState('');
@@ -49,17 +49,6 @@ const DrawerBody = () => {
 
     const handleClose = () => {
         setOpen(false);
-    };
-
-    const newNote = async (e) => {
-        e.preventDefault();
-        if(!path || !desc || !remindDate || !tag || !title)
-            return alert('Please fill all information');
-        try {
-            await axios.post('/api/notes', { path, title, desc, remindDate, tag },  { headers: { Authorization: getJWT() } } );
-        } catch(err) {
-            alert('Please try again later');
-        }
     };
 
     useEffect(() => {
@@ -80,9 +69,9 @@ const DrawerBody = () => {
                 <Dialog onClose={handleClose} open={open} title='New Note'>
                     
                     <DialogTitle>New Note</DialogTitle>
-                    <form onSubmit={e => newNote(e)}>
+                    <form onSubmit={ e => {e.preventDefault(); newNote(path, desc, remindDate, tag, title)}}>
                         <DialogContent>
-                            <TextField name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
+                            <TextField autoFocus name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
                             <TextField name='desc' onChange={e => setDesc(e.target.value)} value={desc} multiline={true} rows='8' label='Content' fullWidth InputLabelProps={{
