@@ -39,7 +39,7 @@ const Drawer = (props) => {
                         keepMounted: true,
                     }}
                 >
-                    <DrawerBody newNote={props.newNote} />
+                    <DrawerBody newNote={props.newNote} pernamentNotes={props.pernamentNotes} />
                 </DrawerUi>
             </Hidden>
             <Hidden smDown implementation='css'>
@@ -50,7 +50,7 @@ const Drawer = (props) => {
                     variant='permanent'
                     open
                 >
-                    <DrawerBody newNote={props.newNote} />
+                    <DrawerBody newNote={props.newNote} pernamentNotes={props.pernamentNotes} />
                 </DrawerUi>
             </Hidden>
         </nav>

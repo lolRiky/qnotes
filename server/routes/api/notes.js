@@ -46,17 +46,20 @@ router.post('/check', verify, async (req, res) => {
 
 router.post('/save', verify, async(req, res) => {
     // Get user and body with note id
-    const { body: { id, newDesc }, user } = req;
+    const { body: { id, newDesc, newTitle }, user } = req;
 
-    if(!id || !newDesc)
+    if(!id || !newDesc || !newTitle)
         res.send({ validation: 'Bad body' });
 
     // Get the user
     const dbUser = await User.findById(user._id);
 
     dbUser.notes.forEach(note => {
-        if(note._id == id)
-            return note.desc = newDesc;
+        if(note._id == id) {
+            note.desc = newDesc;
+            note.title = newTitle
+            return note;
+        }
     })
 
     await dbUser.save();

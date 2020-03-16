@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-import { AddCircleOutline } from '@material-ui/icons';
-import { getJWT } from '../../../../helpers/jwt';
+import { AddCircleOutline, ExpandLessExpandMore} from '@material-ui/icons';
 
-import { Autocomplete } from '@material-ui/lab';
+import { TreeView ,Autocomplete } from '@material-ui/lab';
 // Remove when treeview will come
 import { List, ListItem, ListItemIcon, ListItemText, 
     Divider, makeStyles, TextField, Button, 
-    DialogContent, DialogTitle, DialogActions, Dialog,
+    DialogContent, DialogTitle, DialogActions, Dialog, Collapse,
      } from '@material-ui/core';
-import { MoveToInbox as InboxIcon, Menu as MenuIcon } from '@material-ui/icons';
-import axios from 'axios';
 
 import LogOut from '../../../shared/LogOut';
+
+import { ArrowDropDown as ArrowDropDownIcon, ArrowRight as ArrowRightIcon, Mail as MailIcon, Delete as DeleteIcon, Label, SupervisorAccount as SupervisorAccountIcon,
+Info as InfoIcon, Forum as ForumIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
+import NoteTreeItem from '../Note/NoteTreeItem';
+
 
 const useStyles = makeStyles(theme => ({
     drawerLayout: {
@@ -26,13 +28,19 @@ const useStyles = makeStyles(theme => ({
     },
     extendedIcon: {
         margin: theme.spacing(1)
-    }
+    },
+
+    root: {
+      height: 264,
+      minWidth: 240,
+      maxWidth: 240,
+    },
 }));
 
 const tags = ['No category', 'School', 'Work', 'Life', 'Personal', 'Business'];
 
 // Body of Drawer/Navigation
-const DrawerBody = ({ newNote }) => {
+const DrawerBody = ({ pernamentNotes, newNote }) => {
 
     const [open, setOpen] = useState(false);
     const [path, setPath] = useState('');
@@ -40,7 +48,9 @@ const DrawerBody = ({ newNote }) => {
     const [remindDate, setRemindDate] = useState(Date);
     const [tag, setTag] = useState('');
     const [title, setTitle] = useState('');
-    
+	
+    const [treeNotes, setTreeNotes] = useState(null);
+
     const classes = useStyles();
 
     const handleClickOpen = () => {
@@ -51,13 +61,58 @@ const DrawerBody = ({ newNote }) => {
         setOpen(false);
     };
 
-    useEffect(() => {
-        setPath(`${tag}/`);
-    }, [tag]);
+    const handleLog = () => {
+        const x = treeNotes;
+    }
 
+    useEffect(()=>{  
+        let result = [];
+        let level = { result };
+        pernamentNotes.forEach(note => {
+            const pathSplit = note.path.split('/');
+            pathSplit.reduce((r, name, i, a) => {
+                if (!r[name]) {
+                    if (i === pathSplit.length - 1) {
+				        r[name] = { result: [{name: note.title}] };
+                        r.result.push({ name, children: r[name].result });
+                    }
+                    else {
+                        r[name] = { result: [] };
+                        r.result.push({ name, children: r[name].result });
+                    }
+                }
+        
+                return r[name];
+            }, level)
+        });
+        setTreeNotes(result);
+        // console.log(result);
+        // console.clear();
+    }, [pernamentNotes]);
+
+    const treeItems = nodes => {
+        console.log(nodes);
+        if(Array.isArray(nodes)) {
+                console.log(`ITS ARRAY`, nodes);
+                return nodes.map((node, index) => {
+                    console.log(`IN MAP`, node, typeof(node));
+                    return (<NoteTreeItem key={index} nodeId={(index*Math.random()).toString()} labelText={node.name} labelIcon={MailIcon}>
+                        {Array.isArray(node.children) && node.children.length > 0 ? node.children.map(child => treeItems(child)) : node.name}
+                    </NoteTreeItem>);        
+            });
+            } else {
+                console.log('in cursed else');
+                for(const prop in nodes) {
+                    console.log('in cursed for in', nodes);
+                    return (<NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={MailIcon}>
+                        {Array.isArray(nodes.children) && nodes.children.length > 0 ? nodes.children.map(child => treeItems(child)) : nodes.name}
+                    </NoteTreeItem>);
+                }
+            }           
+    }
     return (
         <div className={classes.drawerLayout}>
-            {/* TODO: Tree view of notes */}
+            {/* <button onClick={handleLog}>Log</button> */}
             <div>
                 <List>
                     <ListItem button key='New Note' onClick={handleClickOpen}>
@@ -69,7 +124,7 @@ const DrawerBody = ({ newNote }) => {
                 <Dialog onClose={handleClose} open={open} title='New Note'>
                     
                     <DialogTitle>New Note</DialogTitle>
-                    <form onSubmit={ e => {e.preventDefault(); newNote(path, desc, remindDate, tag, title)}}>
+                    <form onSubmit={ e => {e.preventDefault(); {newNote(path, desc, remindDate, tag, title); setOpen(!open)}}}>
                         <DialogContent>
                             <TextField autoFocus name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
@@ -105,23 +160,18 @@ const DrawerBody = ({ newNote }) => {
                 </Dialog>
 
                 <Divider />
-                <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MenuIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
-                <Divider />
-                <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MenuIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
+            
+				<TreeView
+					className={classes.root}
+					defaultCollapseIcon={<ArrowDropDownIcon />}
+					defaultExpandIcon={<ArrowRightIcon />}
+					// defaultEndIcon={<div style={{ width: 24 }} />}
+					>
+
+					{treeItems(treeNotes)}
+					
+					</TreeView>
+                            
             </div>
             <div>
                 <LogOut style={classes.full} />

@@ -1,16 +1,22 @@
-import React, { Component, useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Typography, TextField } from "@material-ui/core";
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField} from "@material-ui/core";
 
 const EditNote = ({ fullScreen, open, closeEditNoteHandle, note, saveEditNoteHandle}) => {
 
     const [newDesc, setNewDesc] = useState('');
+    const [newTitle, setNewTitle] = useState('');
 
     const descChangeHandle = (text) => {
         setNewDesc(text);
     }
 
+    const titleChangeHandle = (title) => {
+        setNewTitle(title);
+    }
+
     useEffect(()=>{
         setNewDesc(note.desc);
+        setNewTitle(note.title);
     },[]);
 
     return (
@@ -21,15 +27,29 @@ const EditNote = ({ fullScreen, open, closeEditNoteHandle, note, saveEditNoteHan
             className="responsive-dialog-title"
             aria-labelledby="responsive-dialog-title"
         >
-            <DialogTitle id="responsive-dialog-title">{note.title}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">
+                <TextField
+                    type="text"
+                    variant="outlined"
+                    onChange={e => titleChangeHandle(e.target.value)}
+                    value={newTitle}
+                />
+            </DialogTitle>
             <DialogContent>
-                <textarea onChange={e => descChangeHandle(e.target.value)} value={newDesc} />
+                <TextField
+                    label="Description"
+                    placeholder="Description"
+                    multiline
+                    variant="outlined"
+                    onChange={e => descChangeHandle(e.target.value)} value={newDesc}
+                    style={{width: '100%', height: '90% !important'}}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={closeEditNoteHandle} color="secondary">
                     Cancel
                 </Button>
-                <Button onClick={ () => saveEditNoteHandle(note._id, newDesc)} color="primary">
+                <Button onClick={ () => {saveEditNoteHandle(note._id, newDesc, newTitle); closeEditNoteHandle()}} color="primary">
                     Save
                 </Button>
             </DialogActions>

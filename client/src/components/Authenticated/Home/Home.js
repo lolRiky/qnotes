@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { IconButton,  makeStyles, Grid, InputBase, fade, Menu, MenuItem, Badge } from '@material-ui/core';
-
-import { Menu as MenuIcon, Search as SearchIcon, Mail as MailIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
+import { makeStyles, Grid } from '@material-ui/core';
 
 import Drawer from './Drawer/Drawer';
 import Axios from 'axios';
@@ -15,7 +13,7 @@ const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   content: {
     flexGrow: 1,
@@ -42,7 +40,7 @@ const Home = () => {
     const classes = useStyles();
    
     const searchNotes = (term) => {
-      if(term === '') {
+      if(term == '') {
         setNotes(pernamentNotes);
       } else {
         const filtered = pernamentNotes.filter(x => x.desc.toLowerCase().includes(term.toLowerCase()) || x.title.toLowerCase().includes(term.toLowerCase()));
@@ -59,7 +57,7 @@ const Home = () => {
           if(res.request.status === 200 && res.data)
             console.log(res.data);
 
-          setPernamentNotes([...pernamentNotes, {_id: res.data, path, desc, remindDate, tag, title}]);
+          setPernamentNotes([...pernamentNotes, {_id: res.data, path, desc, remindDate, tag, title, createdAt: Date.now()}]);
 
       } catch(err) {
           alert('Please try again later');
@@ -89,11 +87,11 @@ const Home = () => {
       }
     }
 
-    const saveEditNoteHandle = async (id, newDesc) => {
+    const saveEditNoteHandle = async (id, newDesc, newTitle) => {
       try {
-        const res = await Axios.post('/api/notes/save', { id, newDesc },  { headers: { Authorization: getJWT() } })
+        const res = await Axios.post('/api/notes/save', { id, newDesc, newTitle },  { headers: { Authorization: getJWT() } })
         if(res.status === 200) 
-          setPernamentNotes(pernamentNotes.map(item => item._id === id ? {...item, desc: newDesc} : item));
+          setPernamentNotes(pernamentNotes.map(item => item._id === id ? {...item, desc: newDesc, title: newTitle} : item));
       } catch (e) {
           console.log(`Error Save Handle: ${e}`);
       }
@@ -126,12 +124,13 @@ const Home = () => {
               handleDrawerToggle={handleDrawerToggle}
               drawerWidth={drawerWidth}
               newNote={newNote}
+              pernamentNotes={pernamentNotes}
             />
             <button onClick={() => console.log(pernamentNotes)}>log</button>
             {/* Body */}
             <main className={classes.content}>
-              <Grid container>
-                {pernamentNotes.map((note, index)=> {
+              <Grid container style={{justifyContent: 'center'}}>
+                {notes.map((note, index)=> {
                   return (
                     <Grid item key={index} className={classes.note}>
                       <Note key={index+0.5} note={note} 

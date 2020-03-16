@@ -5,8 +5,6 @@ import './note.css';
 import { Card, CardHeader, CardContent, makeStyles, IconButton, Menu, MenuItem, useMediaQuery, useTheme } from '@material-ui/core';
 import { MoreVert, Delete as DeleteIcon, OpenInNew as OpenInNewIcon, Check as CheckIcon } from '@material-ui/icons';
 import EditNote from './EditNote';
-import Axios from 'axios';
-import { getJWT } from '../../../../helpers/jwt';
 
 const useStyles = makeStyles(theme => ({
     card: props => ({

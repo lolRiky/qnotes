@@ -1,9 +1,8 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Typography, AppBar, Toolbar, makeStyles, IconButton, InputBase, Badge, Menu, MenuItem, fade} from '@material-ui/core';
 import { Menu as MenuIcon, Search as SearchIcon, EventNote as EventNoteIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
 import MenuNote from './Note/MenuNote';
-import LogOut from '../../shared/LogOut';
 import { logOut } from '../../../helpers/jwt';
 
 
@@ -246,8 +245,8 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
                         <EventNoteIcon />
                       </Badge>
                     </IconButton>
-                    <IconButton color="inherit">
-                      <Badge badgeContent={17} color="secondary">
+                    <IconButton onClick={handleNotifMenuOpen} color="inherit">
+                      <Badge badgeContent={weekNotes.length} color="secondary">
                         <NotificationsIcon />
                       </Badge>
                     </IconButton>
