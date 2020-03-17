@@ -4,23 +4,22 @@ import { Hidden, Drawer as DrawerUi, makeStyles } from '@material-ui/core';
 
 import DrawerBody from './DrawerBody';
 
+const useStyles = makeStyles(theme => ({
+    drawer: props => ({
+        [theme.breakpoints.up('md')]: {
+            width: props.drawerWidth,
+            flexShrink: 0,
+        },
+    }),
+    drawerPaper: props => ({
+        width: props.drawerWidth,
+    }),
+}));
 
 /* Drawer/Navigation */
-const Drawer = (props) => {
+const Drawer = React.memo((props) => {
 
-    const useStyles = makeStyles(theme => ({
-        drawer: {
-            [theme.breakpoints.up('md')]: {
-                width: props.drawerWidth,
-                flexShrink: 0,
-            },
-        },
-        drawerPaper: {
-            width: props.drawerWidth,
-        },
-    }));
-
-    const classes = useStyles();
+    const classes = useStyles({drawerWidth: props.drawerWidth});
 
     return (
         <nav className={classes.drawer} aria-label='mailbox folders'>
@@ -56,6 +55,6 @@ const Drawer = (props) => {
         </nav>
     );
 
-}
+});
 
 export default Drawer;

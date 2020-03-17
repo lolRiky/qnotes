@@ -85,6 +85,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [notifEl, setNotifEl] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date().toTimeString());
 
   const [weekNotes, setWeekNotes] = useState([]);
   const classes = useStyles({drawerWidth: drawerWidth});
@@ -119,13 +120,20 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
   }
 
   useEffect(() => {
-    const today = new Date().getDate();
-    
+    setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+  }, []);
+
+  useEffect(() => {
+    const today = new Date(Date.now());
     const notifNotes = notes.filter(note => {
-      const noteDate = new Date(note.remindDate).getDate();
-      const result = noteDate - 7;
-      if(today >= result)
+      // Note.remindDate - week
+      const noteDate = new Date(new Date(note.remindDate) - 604800000);
+      if(today.getTime() >= noteDate.getTime())
         return note;
+        
+        return null;
     });
     
     setWeekNotes(notifNotes);
@@ -222,7 +230,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
                       <MenuIcon />
                   </IconButton>
                   <Typography className={classes.title} varient='h6' noWrap>
-                      QNotes
+                      {currentTime}
                   </Typography>
                   <div className={classes.search}>
                     <div className={classes.searchIcon}>

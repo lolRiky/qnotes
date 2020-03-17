@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { AddCircleOutline, ExpandLessExpandMore} from '@material-ui/icons';
 
@@ -40,8 +40,7 @@ const useStyles = makeStyles(theme => ({
 const tags = ['No category', 'School', 'Work', 'Life', 'Personal', 'Business'];
 
 // Body of Drawer/Navigation
-const DrawerBody = ({ pernamentNotes, newNote }) => {
-
+const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
     const [open, setOpen] = useState(false);
     const [path, setPath] = useState('');
     const [desc, setDesc] = useState('');
@@ -53,9 +52,9 @@ const DrawerBody = ({ pernamentNotes, newNote }) => {
 
     const classes = useStyles();
 
-    const handleClickOpen = () => {
+    const handleClickOpen = useCallback(() => {
         setOpen(true);
-    };
+    }, []);
 
     const handleClose = () => {
         setOpen(false);
@@ -91,25 +90,32 @@ const DrawerBody = ({ pernamentNotes, newNote }) => {
     }, [pernamentNotes]);
 
     const treeItems = nodes => {
-        console.log(nodes);
         if(Array.isArray(nodes)) {
-                console.log(`ITS ARRAY`, nodes);
                 return nodes.map((node, index) => {
-                    console.log(`IN MAP`, node, typeof(node));
                     return (<NoteTreeItem key={index} nodeId={(index*Math.random()).toString()} labelText={node.name} labelIcon={MailIcon}>
                         {Array.isArray(node.children) && node.children.length > 0 ? node.children.map(child => treeItems(child)) : node.name}
                     </NoteTreeItem>);        
             });
-            } else {
-                console.log('in cursed else');
-                for(const prop in nodes) {
-                    console.log('in cursed for in', nodes);
-                    return (<NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={MailIcon}>
-                        {Array.isArray(nodes.children) && nodes.children.length > 0 ? nodes.children.map(child => treeItems(child)) : nodes.name}
-                    </NoteTreeItem>);
-                }
-            }           
+        } else {
+            for(const prop in nodes) {
+                return (<NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={MailIcon}>
+                    {Array.isArray(nodes.children) && nodes.children.length > 0 ? nodes.children.map(child => treeItems(child)) : nodes.name}
+                </NoteTreeItem>);
+            }
+        }           
     }
+
+    const submitNewNote = e => {
+        e.preventDefault();
+        newNote(path, desc, remindDate, tag, title);
+        setPath('');
+        setDesc('');
+        setRemindDate(Date);
+        setTag('');
+        setTitle('');
+        setOpen(!open);
+    }
+
     return (
         <div className={classes.drawerLayout}>
             {/* <button onClick={handleLog}>Log</button> */}
@@ -124,7 +130,7 @@ const DrawerBody = ({ pernamentNotes, newNote }) => {
                 <Dialog onClose={handleClose} open={open} title='New Note'>
                     
                     <DialogTitle>New Note</DialogTitle>
-                    <form onSubmit={ e => {e.preventDefault(); {newNote(path, desc, remindDate, tag, title); setOpen(!open)}}}>
+                    <form onSubmit={ e => submitNewNote(e)}>
                         <DialogContent>
                             <TextField autoFocus name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
@@ -171,13 +177,12 @@ const DrawerBody = ({ pernamentNotes, newNote }) => {
 					{treeItems(treeNotes)}
 					
 					</TreeView>
-                            
             </div>
             <div>
                 <LogOut style={classes.full} />
             </div>
         </div>
     );
-};
+});
 
 export default DrawerBody;

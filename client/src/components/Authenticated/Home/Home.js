@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { makeStyles, Grid } from '@material-ui/core';
 
@@ -43,10 +43,11 @@ const Home = () => {
       if(term == '') {
         setNotes(pernamentNotes);
       } else {
-        const filtered = pernamentNotes.filter(x => x.desc.toLowerCase().includes(term.toLowerCase()) || x.title.toLowerCase().includes(term.toLowerCase()));
+        const filtered = pernamentNotes.filter(x => x.desc.includes(term) || x.title.includes(term));
+        // const filtered = pernamentNotes.filter(x => x.desc.match(new RegExp(term)) || x.title.match(new RegExp(term)));
         setNotes(filtered);
       }
-    }
+    };
 
   const newNote = async (path, desc, remindDate, tag, title) => {
       if(!path || !desc || !remindDate || !tag || !title)
@@ -54,15 +55,13 @@ const Home = () => {
       try {
           const res = await Axios.post('/api/notes', { path, title, desc, remindDate, tag },  { headers: { Authorization: getJWT() } } );
           
-          if(res.request.status === 200 && res.data)
-            console.log(res.data);
-
-          setPernamentNotes([...pernamentNotes, {_id: res.data, path, desc, remindDate, tag, title, createdAt: Date.now()}]);
-
+          if(res.request.status === 200 && res.data) {
+            setPernamentNotes([...pernamentNotes, {_id: res.data, path, desc, remindDate, tag, title, createdAt: Date.now()}]);
+          }
       } catch(err) {
           alert('Please try again later');
       }
-  }
+  };
 
     const deleteNote = async (id) => {
       try {
@@ -72,7 +71,7 @@ const Home = () => {
       } catch (e) {
           alert(`Oops error, please try again later \n${e}`);
       }
-    }
+    };
 
     const checkNote = async (id) => {
       try {
@@ -85,9 +84,9 @@ const Home = () => {
       } catch (e) {
           alert(`Oops error, please try again later.\n${e}`);
       }
-    }
+    };
 
-    const saveEditNoteHandle = async (id, newDesc, newTitle) => {
+    const saveEditNoteHandle = useCallback(async (id, newDesc, newTitle) => {
       try {
         const res = await Axios.post('/api/notes/save', { id, newDesc, newTitle },  { headers: { Authorization: getJWT() } })
         if(res.status === 200) 
@@ -95,16 +94,16 @@ const Home = () => {
       } catch (e) {
           console.log(`Error Save Handle: ${e}`);
       }
-    }
+    }, []);
 
     const fetchNotes = async () => {        
       const fNotes = await Axios.get('/api/notes', { headers: { Authorization: getJWT() } } );
       setPernamentNotes(fNotes.data);
     };
 
-    const handleDrawerToggle = () => {
+    const handleDrawerToggle = useCallback(() => {
       setMobileOpen(!mobileOpen);
-    };
+    }, []);
 
     useEffect(() => {
       fetchNotes();
@@ -126,7 +125,6 @@ const Home = () => {
               newNote={newNote}
               pernamentNotes={pernamentNotes}
             />
-            <button onClick={() => console.log(pernamentNotes)}>log</button>
             {/* Body */}
             <main className={classes.content}>
               <Grid container style={{justifyContent: 'center'}}>

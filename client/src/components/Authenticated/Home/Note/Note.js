@@ -8,7 +8,8 @@ import EditNote from './EditNote';
 
 const useStyles = makeStyles(theme => ({
     card: props => ({
-        background: props.background
+        background: props.background,
+        textDecoration: props.line
     }),
 }));
 
@@ -80,7 +81,7 @@ const Note = ({note, deleteNote, checkNote, saveEditNoteHandle}) => {
             <Card className={classes.card}>
                 <CardHeader 
                 title={note.title} 
-                subheader={new Date(note.createdAt).toDateString()}
+                subheader={new Date(note.remindDate).toDateString()}
                 action={
                     <React.Fragment>
                         {note.check ? <CheckIcon /> : <script />}
@@ -118,4 +119,4 @@ const Note = ({note, deleteNote, checkNote, saveEditNoteHandle}) => {
     );
 };
 
-export default Note;
+export default React.memo(Note);
