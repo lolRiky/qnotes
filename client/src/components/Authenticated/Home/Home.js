@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles, Grid } from '@material-ui/core';
 
@@ -44,7 +44,6 @@ const Home = () => {
         setNotes(pernamentNotes);
       } else {
         const filtered = pernamentNotes.filter(x => x.desc.includes(term) || x.title.includes(term));
-        // const filtered = pernamentNotes.filter(x => x.desc.match(new RegExp(term)) || x.title.match(new RegExp(term)));
         setNotes(filtered);
       }
     };
@@ -86,7 +85,7 @@ const Home = () => {
       }
     };
 
-    const saveEditNoteHandle = useCallback(async (id, newDesc, newTitle) => {
+    const saveEditNoteHandle = async (id, newDesc, newTitle) => {
       try {
         const res = await Axios.post('/api/notes/save', { id, newDesc, newTitle },  { headers: { Authorization: getJWT() } })
         if(res.status === 200) 
@@ -94,16 +93,16 @@ const Home = () => {
       } catch (e) {
           console.log(`Error Save Handle: ${e}`);
       }
-    }, []);
+    };
 
     const fetchNotes = async () => {        
       const fNotes = await Axios.get('/api/notes', { headers: { Authorization: getJWT() } } );
       setPernamentNotes(fNotes.data);
     };
 
-    const handleDrawerToggle = useCallback(() => {
+    const handleDrawerToggle = () => {
       setMobileOpen(!mobileOpen);
-    }, []);
+    };
 
     useEffect(() => {
       fetchNotes();

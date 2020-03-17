@@ -7,6 +7,7 @@ import Protected from './components/Protected';
 import Home from './components/Authenticated/Home/Home';
 import Register from './components/Register/Register';
 import EditeNote from './components/Authenticated/Home/Note/EditNote';
+import Calendar from './components/Authenticated/Calendar';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           {/* Users Home */}
           <Route path='/Home' component={Home} />
           <Route path='/note/:noteId' component={EditeNote} />
+          <Route path='/Calendar' component={Calendar} />
         </AuthenticatedComponent>
       
       </Switch>

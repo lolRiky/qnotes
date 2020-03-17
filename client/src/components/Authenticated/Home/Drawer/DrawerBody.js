@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { AddCircleOutline, ExpandLessExpandMore} from '@material-ui/icons';
+import { AddCircleOutline, Folder as FolderIcon, Description as DescriptionIcon } from '@material-ui/icons';
 
 import { TreeView ,Autocomplete } from '@material-ui/lab';
 // Remove when treeview will come
@@ -21,7 +21,8 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        height: '100vh'
+        height: '100vh',
+        overflowY: 'hidden'
     },
     full: {
       width: '100%'
@@ -62,6 +63,7 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
 
     const handleLog = () => {
         const x = treeNotes;
+        console.log(x);
     }
 
     useEffect(()=>{  
@@ -92,14 +94,16 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
     const treeItems = nodes => {
         if(Array.isArray(nodes)) {
                 return nodes.map((node, index) => {
-                    return (<NoteTreeItem key={index} nodeId={(index*Math.random()).toString()} labelText={node.name} labelIcon={MailIcon}>
-                        {Array.isArray(node.children) && node.children.length > 0 ? node.children.map(child => treeItems(child)) : node.name}
+                    return (<NoteTreeItem key={index} nodeId={(index*Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
+                        {Array.isArray(node.children) && node.children.length > 0 ? node.children.map(child => treeItems(child)) : null}
                     </NoteTreeItem>);        
-            });
+        });
         } else {
             for(const prop in nodes) {
-                return (<NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={MailIcon}>
-                    {Array.isArray(nodes.children) && nodes.children.length > 0 ? nodes.children.map(child => treeItems(child)) : nodes.name}
+                return (<NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={FolderIcon}>
+                    {Array.isArray(nodes.children) && nodes.children.length > 0 ?
+                     nodes.children.map(child => treeItems(child)) :
+                      <NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={DescriptionIcon} /> }
                 </NoteTreeItem>);
             }
         }           
@@ -118,7 +122,7 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
 
     return (
         <div className={classes.drawerLayout}>
-            {/* <button onClick={handleLog}>Log</button> */}
+            <button onClick={handleLog}>Log</button>
             <div>
                 <List>
                     <ListItem button key='New Note' onClick={handleClickOpen}>

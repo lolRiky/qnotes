@@ -17,7 +17,7 @@ const EditNote = ({ fullScreen, open, closeEditNoteHandle, note, saveEditNoteHan
     useEffect(()=>{
         setNewDesc(note.desc);
         setNewTitle(note.title);
-    }, []);
+    },[]);
 
     return (
         <Dialog
@@ -31,7 +31,6 @@ const EditNote = ({ fullScreen, open, closeEditNoteHandle, note, saveEditNoteHan
                 <TextField
                     type="text"
                     variant="outlined"
-                    placeholder="Title"
                     onChange={e => titleChangeHandle(e.target.value)}
                     value={newTitle}
                 />

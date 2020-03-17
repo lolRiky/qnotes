@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { withRouter } from 'react-router-dom';
 import { Typography, AppBar, Toolbar, makeStyles, IconButton, InputBase, Badge, Menu, MenuItem, fade} from '@material-ui/core';
 import { Menu as MenuIcon, Search as SearchIcon, EventNote as EventNoteIcon, Notifications as NotificationsIcon, AccountCircle, MoreVert as MoreVertIcon  } from '@material-ui/icons';
 import MenuNote from './Note/MenuNote';
@@ -81,11 +81,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
+const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [notifEl, setNotifEl] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date().toTimeString());
+  const [todaysNotesCounter, setTodaysNotesCounter] = useState(0);
 
   const [weekNotes, setWeekNotes] = useState([]);
   const classes = useStyles({drawerWidth: drawerWidth});
@@ -120,22 +121,34 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
   }
 
   useEffect(() => {
-    setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
+    const time = setInterval(() => setCurrentTime(new Date().toLocaleTimeString()), 1000);
+
+    return () => clearInterval(time);
   }, []);
+
+  const sameDay = (d1, d2) => {
+    return d1.getFullYear() === d2.getFullYear() &&
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate();
+  }
 
   useEffect(() => {
     const today = new Date(Date.now());
     const notifNotes = notes.filter(note => {
+
+      if(sameDay(today, new Date(note.remindDate))) {
+        setTodaysNotesCounter(prevCount  => prevCount + 1);
+      }
+
       // Note.remindDate - week
       const noteDate = new Date(new Date(note.remindDate) - 604800000);
       if(today.getTime() >= noteDate.getTime())
         return note;
-        
-        return null;
-    });
-    
+      
+      
+      // console.log(sameDay(today, new Date(note.remindDate)));
+      return null;
+      });
     setWeekNotes(notifNotes);
   }, [notes]);
 
@@ -188,7 +201,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
     >
       <MenuItem>
         <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={todaysNotesCounter} color="secondary">
             <EventNoteIcon />
           </Badge>
         </IconButton>
@@ -248,8 +261,8 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
                   </div>
                   <div className={classes.grow} />
                   <div className={classes.sectionDesktop}>
-                    <IconButton color="inherit">
-                      <Badge badgeContent={4} color="secondary">
+                    <IconButton color="inherit" onClick={() => history.push('/Calendar')}>
+                      <Badge badgeContent={todaysNotesCounter} color="secondary">
                         <EventNoteIcon />
                       </Badge>
                     </IconButton>
@@ -290,4 +303,4 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes}) => {
   );
 };
 
-export default Topbar;
+export default withRouter(Topbar);
