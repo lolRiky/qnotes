@@ -4,12 +4,11 @@ import { AddCircleOutline, Folder as FolderIcon, Description as DescriptionIcon,
 
 import { useTheme, useMediaQuery } from '@material-ui/core';
 
-import { TreeView ,Autocomplete } from '@material-ui/lab';
+import { TreeView, Autocomplete } from '@material-ui/lab';
 // Remove when treeview will come
 import { List, ListItem, ListItemIcon, ListItemText, 
     Divider, makeStyles, TextField, Button, 
-    DialogContent, DialogTitle, DialogActions, Dialog, Collapse,
-     } from '@material-ui/core';
+    DialogContent, DialogTitle, DialogActions, Dialog } from '@material-ui/core';
 
 import NoteTreeItem from '../Note/NoteTreeItem';
 import EditNote from '../Note/EditNote';
@@ -55,7 +54,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
 
     // Edit Note 
     const theme = useTheme();
-    const [openEditNote, setOpenEditNote] = useState(false);
+    const [openEditNote, setOpenEditNote] = useState(true);
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const openEditNoteHandle = () => {
@@ -75,7 +74,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
     };
     // node.children['0'] > 0
     const handleLog = () => {
-        console.log(treeNotes[0].children[0].children['0'].children == undefined);
+        console.log(openEditNote);
     }
 
     useEffect(()=>{  
@@ -99,7 +98,6 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
             }, level)
         });
         setTreeNotes(result);
-        console.log(result);
         // console.clear();
     }, [pernamentNotes]);
 
@@ -116,7 +114,6 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
 
     const treeItems = nodes => {
         if(nodes){
-            // console.log(`fileeee`, nodes);
             return nodes.map((node, index) =>{
                 return (
                 <NoteTreeItem style={{paddingLeft: '8px'}} key={index} nodeId={(Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
@@ -125,40 +122,21 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
                     <>
                      <NoteTreeItem onClick={openEditNoteHandle} key={Math.random()} nodeId={Math.random().toString()} 
                      labelText={node.children[0].name} labelIcon={DescriptionIcon} />
-                    <EditNote fullScreen={fullScreen}
-                        open={openEditNote} 
-                        closeEditNoteHandle={closeEditNoteHandle}
-                        saveEditNoteHandle={saveEditNoteHandle}
-                        note={node.children[0]}
-                        />
-                    </>}
+                        <EditNote fullScreen={fullScreen}
+                            open={openEditNote} 
+                            closeEditNoteHandle={closeEditNoteHandle}
+                            saveEditNoteHandle={saveEditNoteHandle}
+                            note={node.children[0]}
+                            />
+                        </>}
                 </NoteTreeItem>)
             });
         }
-
-        // if(Array.isArray(nodes)) {
-        //     console.log('yeah');
-        //         return nodes.map((node, index) => {
-        //             return (<NoteTreeItem key={index} nodeId={(Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
-        //                 {Array.isArray(node.children) ? node.children.map(child => treeItems(child)) : null}
-        //             </NoteTreeItem>);        
-        // });
-        // } else {
-        //     for(const prop in nodes) {
-        //         console.log(prop)
-        //         return (
-        //         <NoteTreeItem style={{paddingLeft: '8px'}} key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={FolderIcon}>
-        //             {Array.isArray(nodes.children) ?
-        //              nodes.children.map(child => treeItems(child)) :
-        //               <NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={DescriptionIcon} /> }
-        //         </NoteTreeItem>);
-        //     }
-        // }           
     };
 
     return (
         <div className={classes.drawerLayout}>
-            {/* <button onClick={handleLog}>Log</button> */}
+            <button onClick={handleLog}>Log</button>
             <div>
                 <List>
                     <ListItem button key='New Note' onClick={handleClickOpen}>

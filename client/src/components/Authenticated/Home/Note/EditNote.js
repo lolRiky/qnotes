@@ -17,7 +17,7 @@ const EditNote = ({ fullScreen, open, closeEditNoteHandle, note, saveEditNoteHan
     useEffect(()=>{
         setNewDesc(note.desc);
         setNewTitle(note.title);
-    },[]);
+    }, [note.desc, note.title]);
 
     return (
         <Dialog

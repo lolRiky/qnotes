@@ -40,7 +40,7 @@ const Home = () => {
     const classes = useStyles();
    
     const searchNotes = (term) => {
-      if(term == '') {
+      if(term === '') {
         setNotes(pernamentNotes);
       } else {
         const filtered = pernamentNotes.filter(x => x.desc.includes(term) || x.title.includes(term));

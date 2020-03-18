@@ -74,7 +74,7 @@ const Note = ({note, deleteNote, checkNote, saveEditNoteHandle}) => {
                 setColor('white');
                 break;
         }
-    }, []);
+    }, [note.tag]);
 
     return (
         <Fragment>

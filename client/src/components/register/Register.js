@@ -103,7 +103,7 @@ class Register extends Component {
                 <h2>Register</h2>
                 <form onSubmit={e => this.submit(e)}>
                     <div className='register-field'>
-                        <TextField onChange={e => this.change(e)}
+                        <TextField autoFocus onChange={e => this.change(e)}
                             name='name' placeholder="Name"
                             value={this.state.name} />
                         <p className='text-warning'>{this.state.errors.name}</p>

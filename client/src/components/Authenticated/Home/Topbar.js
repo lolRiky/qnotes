@@ -134,21 +134,24 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
 
   useEffect(() => {
     const today = new Date(Date.now());
+    setTodaysNotesCounter(0);
     const notifNotes = notes.filter(note => {
-
-      if(sameDay(today, new Date(note.remindDate))) {
-        setTodaysNotesCounter(prevCount  => prevCount + 1);
+      
+      const noteDate = new Date(new Date(note.remindDate) - 604800000);
+      if(today.getTime() >= noteDate.getTime()) {
+        setTodaysNotesCounter(prevCount => prevCount + 1);
       }
 
       // Note.remindDate - week
-      const noteDate = new Date(new Date(note.remindDate) - 604800000);
-      if(today.getTime() >= noteDate.getTime())
+      if(sameDay(today, new Date(note.remindDate)))
         return note;
       
       
       // console.log(sameDay(today, new Date(note.remindDate)));
       return null;
       });
+
+    
     setWeekNotes(notifNotes);
   }, [notes]);
 
@@ -182,7 +185,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>Profile</MenuItem> */}
       <MenuItem onClick={logOut}>Logout</MenuItem>
     </Menu>
   );

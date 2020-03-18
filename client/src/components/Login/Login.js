@@ -69,7 +69,7 @@ class Login extends Component {
 				<form onSubmit={e => this.submit(e)}>
 					<p className='text-warning'>{this.state.error}</p>
 					<div className='register-field'>
-						<TextField name='email' placeholder='email'
+						<TextField autoFocus name='email' placeholder='email'
 						type='email'
 							onChange={e => this.change(e)}
 							value={this.state.email}/>
