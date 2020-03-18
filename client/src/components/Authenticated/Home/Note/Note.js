@@ -45,7 +45,6 @@ const Note = ({note, deleteNote, checkNote, saveEditNoteHandle}) => {
     }
 
     useEffect(() => {
-        console.log(note.tag);
         switch(note.tag) {
             case 'No category':
                 setColor('rgb(255, 200, 47)');

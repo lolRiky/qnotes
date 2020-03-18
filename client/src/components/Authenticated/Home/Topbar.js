@@ -199,7 +199,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={() => history.push('/Calendar')}>
         <IconButton color="inherit">
           <Badge badgeContent={todaysNotesCounter} color="secondary">
             <EventNoteIcon />

@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 /* Drawer/Navigation */
-const Drawer = React.memo((props) => {
+const Drawer = (props) => {
 
     const classes = useStyles({drawerWidth: props.drawerWidth});
 
@@ -38,7 +38,9 @@ const Drawer = React.memo((props) => {
                         keepMounted: true,
                     }}
                 >
-                    <DrawerBody newNote={props.newNote} pernamentNotes={props.pernamentNotes} />
+                    <DrawerBody newNote={props.newNote} 
+                    pernamentNotes={props.pernamentNotes}
+                    saveEditNoteHandle={props.saveEditNoteHandle} />
                 </DrawerUi>
             </Hidden>
             <Hidden smDown implementation='css'>
@@ -49,12 +51,14 @@ const Drawer = React.memo((props) => {
                     variant='permanent'
                     open
                 >
-                    <DrawerBody newNote={props.newNote} pernamentNotes={props.pernamentNotes} />
+                    <DrawerBody newNote={props.newNote} 
+                    pernamentNotes={props.pernamentNotes}
+                    saveEditNoteHandle={props.saveEditNoteHandle} />
                 </DrawerUi>
             </Hidden>
         </nav>
     );
 
-});
+};
 
 export default Drawer;

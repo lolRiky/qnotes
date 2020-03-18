@@ -22,6 +22,7 @@ const EditNote = ({ fullScreen, open, closeEditNoteHandle, note, saveEditNoteHan
     return (
         <Dialog
             fullScreen={fullScreen}
+            disablePortal={true}
             open={open}
             onClose={closeEditNoteHandle}
             className="responsive-dialog-title"

@@ -120,6 +120,7 @@ const Home = () => {
               classes={classes.drawerPaper}
               mobileOpen={mobileOpen}
               handleDrawerToggle={handleDrawerToggle}
+              saveEditNoteHandle={saveEditNoteHandle}
               drawerWidth={drawerWidth}
               newNote={newNote}
               pernamentNotes={pernamentNotes}

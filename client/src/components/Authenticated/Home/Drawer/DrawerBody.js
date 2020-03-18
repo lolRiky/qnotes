@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { AddCircleOutline, Folder as FolderIcon, Description as DescriptionIcon } from '@material-ui/icons';
+import { AddCircleOutline, Folder as FolderIcon, Description as DescriptionIcon, ArrowDropDown as ArrowDropDownIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons';
+
+import { useTheme, useMediaQuery } from '@material-ui/core';
 
 import { TreeView ,Autocomplete } from '@material-ui/lab';
 // Remove when treeview will come
@@ -9,11 +11,9 @@ import { List, ListItem, ListItemIcon, ListItemText,
     DialogContent, DialogTitle, DialogActions, Dialog, Collapse,
      } from '@material-ui/core';
 
-import LogOut from '../../../shared/LogOut';
-
-import { ArrowDropDown as ArrowDropDownIcon, ArrowRight as ArrowRightIcon, Mail as MailIcon, Delete as DeleteIcon, Label, SupervisorAccount as SupervisorAccountIcon,
-Info as InfoIcon, Forum as ForumIcon, LocalOffer as LocalOfferIcon } from '@material-ui/icons';
 import NoteTreeItem from '../Note/NoteTreeItem';
+import EditNote from '../Note/EditNote';
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         justifyContent: 'space-between',
         height: '100vh',
-        overflowY: 'hidden'
+        overflow: 'auto',
+        overflowX: 'hidden'
     },
     full: {
       width: '100%'
@@ -41,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 const tags = ['No category', 'School', 'Work', 'Life', 'Personal', 'Business'];
 
 // Body of Drawer/Navigation
-const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
+const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
     const [open, setOpen] = useState(false);
     const [path, setPath] = useState('');
     const [desc, setDesc] = useState('');
@@ -50,20 +51,31 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
     const [title, setTitle] = useState('');
 	
     const [treeNotes, setTreeNotes] = useState(null);
-
     const classes = useStyles();
 
-    const handleClickOpen = useCallback(() => {
+    // Edit Note 
+    const theme = useTheme();
+    const [openEditNote, setOpenEditNote] = useState(false);
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const openEditNoteHandle = () => {
+        setOpenEditNote(true);
+    }
+    
+    const closeEditNoteHandle = () => {
+        setOpenEditNote(false);
+    }
+
+    const handleClickOpen = () => {
         setOpen(true);
-    }, []);
+    };
 
     const handleClose = () => {
         setOpen(false);
     };
-
+    // node.children['0'] > 0
     const handleLog = () => {
-        const x = treeNotes;
-        console.log(x);
+        console.log(treeNotes[0].children[0].children['0'].children == undefined);
     }
 
     useEffect(()=>{  
@@ -74,7 +86,7 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
             pathSplit.reduce((r, name, i, a) => {
                 if (!r[name]) {
                     if (i === pathSplit.length - 1) {
-				        r[name] = { result: [{name: note.title}] };
+				        r[name] = { result: [{name: note.title, desc: note.desc, _id: note._id, title: note.title}] };
                         r.result.push({ name, children: r[name].result });
                     }
                     else {
@@ -87,27 +99,9 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
             }, level)
         });
         setTreeNotes(result);
-        // console.log(result);
+        console.log(result);
         // console.clear();
     }, [pernamentNotes]);
-
-    const treeItems = nodes => {
-        if(Array.isArray(nodes)) {
-                return nodes.map((node, index) => {
-                    return (<NoteTreeItem key={index} nodeId={(index*Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
-                        {Array.isArray(node.children) && node.children.length > 0 ? node.children.map(child => treeItems(child)) : null}
-                    </NoteTreeItem>);        
-        });
-        } else {
-            for(const prop in nodes) {
-                return (<NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={FolderIcon}>
-                    {Array.isArray(nodes.children) && nodes.children.length > 0 ?
-                     nodes.children.map(child => treeItems(child)) :
-                      <NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={DescriptionIcon} /> }
-                </NoteTreeItem>);
-            }
-        }           
-    }
 
     const submitNewNote = e => {
         e.preventDefault();
@@ -120,9 +114,51 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
         setOpen(!open);
     }
 
+    const treeItems = nodes => {
+        if(nodes){
+            // console.log(`fileeee`, nodes);
+            return nodes.map((node, index) =>{
+                return (
+                <NoteTreeItem style={{paddingLeft: '8px'}} key={index} nodeId={(Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
+                    {Array.isArray(node.children[0].children) ? 
+                    node.children.map(child => treeItems([child])) :
+                    <>
+                     <NoteTreeItem onClick={openEditNoteHandle} key={Math.random()} nodeId={Math.random().toString()} 
+                     labelText={node.children[0].name} labelIcon={DescriptionIcon} />
+                    <EditNote fullScreen={fullScreen}
+                        open={openEditNote} 
+                        closeEditNoteHandle={closeEditNoteHandle}
+                        saveEditNoteHandle={saveEditNoteHandle}
+                        note={node.children[0]}
+                        />
+                    </>}
+                </NoteTreeItem>)
+            });
+        }
+
+        // if(Array.isArray(nodes)) {
+        //     console.log('yeah');
+        //         return nodes.map((node, index) => {
+        //             return (<NoteTreeItem key={index} nodeId={(Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
+        //                 {Array.isArray(node.children) ? node.children.map(child => treeItems(child)) : null}
+        //             </NoteTreeItem>);        
+        // });
+        // } else {
+        //     for(const prop in nodes) {
+        //         console.log(prop)
+        //         return (
+        //         <NoteTreeItem style={{paddingLeft: '8px'}} key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={FolderIcon}>
+        //             {Array.isArray(nodes.children) ?
+        //              nodes.children.map(child => treeItems(child)) :
+        //               <NoteTreeItem key={Math.random()} nodeId={Math.random().toString()} labelText={nodes.name} labelIcon={DescriptionIcon} /> }
+        //         </NoteTreeItem>);
+        //     }
+        // }           
+    };
+
     return (
         <div className={classes.drawerLayout}>
-            <button onClick={handleLog}>Log</button>
+            {/* <button onClick={handleLog}>Log</button> */}
             <div>
                 <List>
                     <ListItem button key='New Note' onClick={handleClickOpen}>
@@ -182,11 +218,8 @@ const DrawerBody = React.memo(({ pernamentNotes, newNote }) => {
 					
 					</TreeView>
             </div>
-            <div>
-                <LogOut style={classes.full} />
-            </div>
         </div>
     );
-});
+};
 
 export default DrawerBody;
