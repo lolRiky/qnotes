@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, makeStyles, Grid } from '@material-ui/core';
 
 import Folder from './shared/SVG/Folder';
+import Logo from '../assets/logo32.png';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     },
     toolbar: theme.mixins.toolbar,
     title: {
-        flexGrow: 1
+        flexGrow: 1,
     },
     main: {
         height: '100vh !important'
@@ -28,9 +29,9 @@ const LandingPage = () => {
         <div>
             <AppBar posittion='fixed' className={classes.root}>
                 <Toolbar>
-                    <Typography variant='h6' className={classes.title}>
-                        QNotes
-                    </Typography>
+                    <div className={classes.title}>
+                        <img src={Logo} alt="logo" />
+                    </div>
                     <Button className={classes.margin} component={Link} to='/Login' color='inherit'>Login</Button>
                     <Button component={Link} to='/Register' color='inherit'>Register</Button>
                 </Toolbar>
