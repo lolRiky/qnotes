@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 const CalendarPage = ({history}) => {
     const [notes, setNotes] = useState([]);
-    const [currentTime, setCurrentTime] = useState(new Date().toTimeString());
+    const [currentTime, setCurrentTime] = useState('time');
   
     const classes = useStyles();
     

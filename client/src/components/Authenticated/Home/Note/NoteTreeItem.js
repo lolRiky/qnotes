@@ -1,7 +1,7 @@
-import React from 'react';
-import { makeStyles, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+import { makeStyles, Typography, useTheme, useMediaQuery } from '@material-ui/core';
 import { TreeItem } from '@material-ui/lab';
-
+import EditNote from '../Note/EditNote';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -53,17 +53,38 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const NoteTreeItem = ({ labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other }) => {
+const NoteTreeItem = ({ labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, saveEditNoteHandle, note, ...other }) => {
     const classes = useStyles();
 
+    // Edit Note 
+    const theme = useTheme();
+    const [open, setOpen] = useState(false);
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    const openEditNoteHandle = () => {
+        setOpen(!open);
+    }
+    
+    const closeEditNoteHandle = () => {
+        setOpen(!open);
+    }
+
+
     return (
-        <TreeItem
+        <TreeItem onClick={openEditNoteHandle}
             label={
                 <div className={classes.labelRoot}>
                     <LabelIcon color="inherit" className={classes.labelIcon} />
                     <Typography variant="body2" className={classes.labelText}>
                         {labelText}
                     </Typography>
+                    {note ?<EditNote fullScreen={fullScreen}
+                            open={open} 
+                            closeEditNoteHandle={closeEditNoteHandle}
+                            saveEditNoteHandle={saveEditNoteHandle}
+                            note={note}
+                            /> : null }
+                    
                 </div>
             }
             style={{

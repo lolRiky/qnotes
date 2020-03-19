@@ -85,7 +85,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [notifEl, setNotifEl] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date().toTimeString());
+  const [currentTime, setCurrentTime] = useState('time');
   const [todaysNotesCounter, setTodaysNotesCounter] = useState(0);
 
   const [weekNotes, setWeekNotes] = useState([]);

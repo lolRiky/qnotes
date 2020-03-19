@@ -51,18 +51,23 @@ const LandingPage = () => {
             <div className='m24'></div>
             <Grid container justify='center' alignItems='flex-start'>
                 <Grid item xs={12} sm md={3} lg={3} className='p16'>
-                    <Typography variant='subtitle1'>Fast</Typography>
+                    <Typography variant='subtitle1'>Quick</Typography>
                     <Typography variant='body1'>Quickly take notes</Typography>
                 </Grid>
                 <Grid item xs={12} sm md={3} lg={3} className='p16'>
                     <Typography variant='subtitle1'>Everything In One Place</Typography>
-                    <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
+                    <Typography variant='body1'>Your laptop, tablet or a smartphone have your notes</Typography>
                 </Grid>
                 <Grid item xs={12} sm md={3} lg={3} className='p16'>
-                    <Typography variant='subtitle1'>Organize</Typography>
-                    <Typography variant='body1'>lacus, a molestie risus augue vitae leo. Aenean tincidunt sapien et ligula laoreet. </Typography>
+                    <Typography variant='subtitle1'>Calendar</Typography>
+                    <Typography variant='body1'>Plan out your day looking your tasks of the day</Typography>
                 </Grid>
             </Grid>
+
+            <div style={{textAlign: 'center'}}>
+                <Typography variant='h5' style={{margin: '16px'}}>Try for free!</Typography>
+                <Button component={Link} to='/Register' variant='outlined' color='primary'>REGISTER</Button>
+            </div>
         </div>
     );
 

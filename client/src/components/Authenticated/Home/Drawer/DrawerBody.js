@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import { AddCircleOutline, Folder as FolderIcon, Description as DescriptionIcon, ArrowDropDown as ArrowDropDownIcon, ArrowRight as ArrowRightIcon } from '@material-ui/icons';
 
-import { useTheme, useMediaQuery } from '@material-ui/core';
-
 import { TreeView, Autocomplete } from '@material-ui/lab';
 // Remove when treeview will come
 import { List, ListItem, ListItemIcon, ListItemText, 
@@ -11,9 +9,6 @@ import { List, ListItem, ListItemIcon, ListItemText,
     DialogContent, DialogTitle, DialogActions, Dialog } from '@material-ui/core';
 
 import NoteTreeItem from '../Note/NoteTreeItem';
-import EditNote from '../Note/EditNote';
-
-
 
 const useStyles = makeStyles(theme => ({
     drawerLayout: {
@@ -29,6 +24,11 @@ const useStyles = makeStyles(theme => ({
     },
     extendedIcon: {
         margin: theme.spacing(1)
+    },
+    content: {
+        "& div": {
+            margin: theme.spacing(0.5),
+        }
     },
 
     root: {
@@ -52,18 +52,6 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
     const [treeNotes, setTreeNotes] = useState(null);
     const classes = useStyles();
 
-    // Edit Note 
-    const theme = useTheme();
-    const [openEditNote, setOpenEditNote] = useState(true);
-    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-    const openEditNoteHandle = () => {
-        setOpenEditNote(true);
-    }
-    
-    const closeEditNoteHandle = () => {
-        setOpenEditNote(false);
-    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -72,10 +60,6 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
     const handleClose = () => {
         setOpen(false);
     };
-    // node.children['0'] > 0
-    const handleLog = () => {
-        console.log(openEditNote);
-    }
 
     useEffect(()=>{  
         let result = [];
@@ -119,16 +103,8 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
                 <NoteTreeItem style={{paddingLeft: '8px'}} key={index} nodeId={(Math.random()).toString()} labelText={node.name} labelIcon={FolderIcon}>
                     {Array.isArray(node.children[0].children) ? 
                     node.children.map(child => treeItems([child])) :
-                    <>
-                     <NoteTreeItem onClick={openEditNoteHandle} key={Math.random()} nodeId={Math.random().toString()} 
-                     labelText={node.children[0].name} labelIcon={DescriptionIcon} />
-                        <EditNote fullScreen={fullScreen}
-                            open={openEditNote} 
-                            closeEditNoteHandle={closeEditNoteHandle}
-                            saveEditNoteHandle={saveEditNoteHandle}
-                            note={node.children[0]}
-                            />
-                        </>}
+                     <NoteTreeItem saveEditNoteHandle={saveEditNoteHandle} note={node.children[0]} key={Math.random()} nodeId={Math.random().toString()} 
+                     labelText={node.children[0].name} labelIcon={DescriptionIcon} />}
                 </NoteTreeItem>)
             });
         }
@@ -136,7 +112,6 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
 
     return (
         <div className={classes.drawerLayout}>
-            <button onClick={handleLog}>Log</button>
             <div>
                 <List>
                     <ListItem button key='New Note' onClick={handleClickOpen}>
@@ -149,7 +124,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
                     
                     <DialogTitle>New Note</DialogTitle>
                     <form onSubmit={ e => submitNewNote(e)}>
-                        <DialogContent>
+                        <DialogContent className={classes.content}>
                             <TextField autoFocus name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
@@ -159,7 +134,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
                             <TextField name='remindDate' onChange={e => setRemindDate(e.target.value)} type='date' value={remindDate} label='Date to get reminded' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
-                            <Autocomplete
+                            <Autocomplete style={{marginLeft: '-0.5px'}}
                             onChange={e => setTag(e.target.value)}
                             options={tags}
                             getOptionLabel={(option) => {
@@ -167,7 +142,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
                                 return option;
                             }}
                             renderInput={params => (
-                                <TextField {...params} name='tag'  label='Tag' fullWidth InputLabelProps={{
+                                <TextField {...params} name='tag' label='Tag' fullWidth InputLabelProps={{
                                     shrink: true
                                 }}/>
                             )}/>

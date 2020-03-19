@@ -9,7 +9,6 @@ import EditNote from './EditNote';
 const useStyles = makeStyles(theme => ({
     card: props => ({
         background: props.background,
-        textDecoration: props.line
     }),
 }));
 
@@ -78,7 +77,7 @@ const Note = ({note, deleteNote, checkNote, saveEditNoteHandle}) => {
 
     return (
         <Fragment>
-            <Card className={classes.card}>
+            <Card className={classes.card} style={{textDecoration: note.check ? 'line-through' : 'initial'}}>
                 <CardHeader 
                 title={note.title} 
                 subheader={new Date(note.remindDate).toDateString()}
