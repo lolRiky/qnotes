@@ -52,7 +52,7 @@ const Home = () => {
       if(!path || !desc || !remindDate || !tag || !title)
           return alert('Please fill all information');
         
-      // path = path.slice(-1) === '/' ? path.slice(0, -1) + '' : path;
+      path = path.slice(-1) === '/' ? path.slice(0, -1) + '' : path;
 
       try {
           const res = await Axios.post('/api/notes', { path, title, desc, remindDate, tag },  { headers: { Authorization: getJWT() } } );
