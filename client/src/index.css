@@ -45,7 +45,14 @@ header {
 .m24 {
     margin: 28px;
 }
-
+/* hiding time */
+html body div#root div div.rbc-calendar div.rbc-time-view div.rbc-time-content div.rbc-day-slot.rbc-time-column div.rbc-events-container div.rbc-event div.rbc-event-label,
+html body div#root div div.rbc-calendar div.rbc-time-view div.rbc-time-content div.rbc-time-gutter.rbc-time-column,
+html body div#root div div.rbc-calendar div.rbc-time-view div.rbc-time-header.rbc-overflowing div.rbc-label.rbc-time-header-gutter,
+html body div#root div div.rbc-calendar div.rbc-agenda-view table.rbc-agenda-table thead tr th.rbc-header,
+html body div#root div div.rbc-calendar div.rbc-agenda-view div.rbc-agenda-content table.rbc-agenda-table tbody tr td.rbc-agenda-time-cell {
+    display: none;
+}
 
 /* Edit Note desktop */
 html body div.MuiDialog-root.responsive-dialog-title div.MuiDialog-container.MuiDialog-scrollPaper div.MuiPaper-root.MuiDialog-paper.MuiDialog-paperScrollPaper.MuiDialog-paperWidthSm.MuiPaper-elevation24.MuiPaper-rounded {
@@ -54,6 +61,12 @@ html body div.MuiDialog-root.responsive-dialog-title div.MuiDialog-container.Mui
 @media only screen and (max-height: 400px) {
     .h\:sm-noWrap{
         flex-wrap: nowrap !important;
+    }
+}
+@media only screen and (max-height: 560px) {
+    html body div#root div div.rbc-calendar div.rbc-toolbar {
+        display: block;
+        width: 100%;
     }
 }
 h1,h2,h3,h4,h5,h6{margin:0;}

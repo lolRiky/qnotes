@@ -62,11 +62,13 @@ const NoteTreeItem = ({ labelText, labelIcon: LabelIcon, labelInfo, color, bgCol
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const openEditNoteHandle = () => {
-        setOpen(!open);
+        if(open !== true) 
+           setOpen(!open);           
     }
     
     const closeEditNoteHandle = () => {
-        setOpen(!open);
+        if(open === true) 
+            setOpen(!open);
     }
 
 

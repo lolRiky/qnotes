@@ -51,6 +51,9 @@ const Home = () => {
   const newNote = async (path, desc, remindDate, tag, title) => {
       if(!path || !desc || !remindDate || !tag || !title)
           return alert('Please fill all information');
+        
+      // path = path.slice(-1) === '/' ? path.slice(0, -1) + '' : path;
+
       try {
           const res = await Axios.post('/api/notes', { path, title, desc, remindDate, tag },  { headers: { Authorization: getJWT() } } );
           
@@ -66,7 +69,7 @@ const Home = () => {
       try {
           const filtered = pernamentNotes.filter(x => x._id !== id);
           setPernamentNotes(filtered);
-          await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
+          const res = await Axios.post('/api/notes/delete', { id },  { headers: { Authorization: getJWT() } } );
       } catch (e) {
           alert(`Oops error, please try again later \n${e}`);
       }

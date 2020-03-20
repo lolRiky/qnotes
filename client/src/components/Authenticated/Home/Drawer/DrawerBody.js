@@ -25,11 +25,6 @@ const useStyles = makeStyles(theme => ({
     extendedIcon: {
         margin: theme.spacing(1)
     },
-    content: {
-        "& div": {
-            margin: theme.spacing(0.5),
-        }
-    },
 
     root: {
       height: 264,
@@ -68,6 +63,10 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
             const pathSplit = note.path.split('/');
             pathSplit.reduce((r, name, i, a) => {
                 if (!r[name]) {
+                    if(r[name]  == note.title){
+                        r[name] = { result: [{name: note.title, desc: note.desc, _id: note._id, title: note.title}] };
+                        r.result.push({name, children: r[name].result})
+                    }
                     if (i === pathSplit.length - 1) {
 				        r[name] = { result: [{name: note.title, desc: note.desc, _id: note._id, title: note.title}] };
                         r.result.push({ name, children: r[name].result });
@@ -82,7 +81,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
             }, level)
         });
         setTreeNotes(result);
-        // console.clear();
+        console.log(result);
     }, [pernamentNotes]);
 
     const submitNewNote = e => {
@@ -124,7 +123,7 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
                     
                     <DialogTitle>New Note</DialogTitle>
                     <form onSubmit={ e => submitNewNote(e)}>
-                        <DialogContent className={classes.content}>
+                        <DialogContent>
                             <TextField autoFocus name='title' onChange={e => setTitle(e.target.value)} value={title} label='Title' fullWidth InputLabelProps={{
                                 shrink: true
                             }}/>
