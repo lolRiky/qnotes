@@ -147,7 +147,6 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
         return note;
       
       
-      // console.log(sameDay(today, new Date(note.remindDate)));
       return null;
       });
 

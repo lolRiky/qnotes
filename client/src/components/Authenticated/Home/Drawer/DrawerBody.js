@@ -81,7 +81,6 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
             }, level)
         });
         setTreeNotes(result);
-        console.log(result);
     }, [pernamentNotes]);
 
     const submitNewNote = e => {

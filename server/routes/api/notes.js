@@ -96,14 +96,4 @@ router.get('/', verify, async (req, res) => {
     res.send(dbUser.notes);    
 });
 
-router.get('/:id', async (req, res) => {
-    
-    console.log(req);
-    
-    
-
-    res.send('hi');
-
-});
-
 module.exports = router;
