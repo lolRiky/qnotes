@@ -38,6 +38,7 @@ const tags = ['No category', 'School', 'Work', 'Life', 'Personal', 'Business'];
 // Body of Drawer/Navigation
 const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
     const [open, setOpen] = useState(false);
+    const [openRemindDialog, setOpenRemindDialog] = useState(false);
     const [path, setPath] = useState('');
     const [desc, setDesc] = useState('');
     const [remindDate, setRemindDate] = useState(Date);
@@ -63,18 +64,8 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
             const pathSplit = note.path.split('/');
             pathSplit.reduce((r, name, i, a) => {
                 if (!r[name]) {
-                    if(r[name]  == note.title){
-                        r[name] = { result: [{name: note.title, desc: note.desc, _id: note._id, title: note.title}] };
-                        r.result.push({name, children: r[name].result})
-                    }
-                    if (i === pathSplit.length - 1) {
-				        r[name] = { result: [{name: note.title, desc: note.desc, _id: note._id, title: note.title}] };
-                        r.result.push({ name, children: r[name].result });
-                    }
-                    else {
-                        r[name] = { result: [] };
-                        r.result.push({ name, children: r[name].result });
-                    }
+                    r[name] = { result: [{name: note.title, desc: note.desc, _id: note._id, title: note.title}] };
+                    r.result.push({name, children: r[name].result})
                 }
         
                 return r[name];
@@ -85,6 +76,12 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
 
     const submitNewNote = e => {
         e.preventDefault();
+        const today = new Date();
+        const rd = new Date(remindDate);
+        if(today > rd) {
+            setOpenRemindDialog(true);
+            return;
+        }
         newNote(path, desc, remindDate, tag, title);
         setPath('');
         setDesc('');
@@ -158,6 +155,16 @@ const DrawerBody = ({ pernamentNotes, newNote, saveEditNoteHandle }) => {
 
                 <Divider />
             
+                <Dialog onClose={() => setOpenRemindDialog(false)} open={openRemindDialog} title='Invalid remind date'>
+                    <DialogTitle>Invalid Remind Date</DialogTitle>
+                    <DialogContent>You can not enter a date in the past</DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenRemindDialog(false)} 
+                        type='button' variant='contained' 
+                        color='secondary'>OK</Button>
+                    </DialogActions>
+                </Dialog>
+
 				<TreeView
 					className={classes.root}
 					defaultCollapseIcon={<ArrowDropDownIcon />}

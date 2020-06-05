@@ -84,7 +84,7 @@ router.post('/delete', verify, async (req, res) => {
     const saveddbUser = await dbUser.save();
     
     // Everything went fine
-    res.status(200);
+    res.sendStatus(200);
 });
 
 router.get('/', verify, async (req, res) => {

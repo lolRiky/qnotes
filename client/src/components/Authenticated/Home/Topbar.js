@@ -132,13 +132,27 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
     d1.getDate() === d2.getDate();
   }
 
+  const dateCheck = (from,to,check) => {
+
+    var fDate,lDate,cDate;
+    fDate = Date.parse(from);
+    lDate = Date.parse(to);
+    cDate = Date.parse(check);
+
+    if((cDate <= lDate && cDate >= fDate)) {
+        return true;
+    }
+    return false;
+}
+
   useEffect(() => {
-    const today = new Date(Date.now());
+    const today = new Date();
+    const todayPlusWeek = new Date(today.getTime() + 604800000);
     setTodaysNotesCounter(0);
     const notifNotes = notes.filter(note => {
       
-      const noteDate = new Date(new Date(note.remindDate) - 604800000);
-      if(today.getTime() >= noteDate.getTime()) {
+      const noteDate = new Date(note.remindDate);
+      if(dateCheck(today, todayPlusWeek, noteDate)) {
         setTodaysNotesCounter(prevCount => prevCount + 1);
       }
 
@@ -202,7 +216,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
       onClose={handleMobileMenuClose}
     >
       <MenuItem onClick={() => history.push('/Calendar')}>
-        <IconButton color="inherit">
+        <IconButton title="Number of tasks for following week" color="inherit">
           <Badge badgeContent={todaysNotesCounter} color="secondary">
             <EventNoteIcon />
           </Badge>
@@ -210,7 +224,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
         <p>Calendar</p>
       </MenuItem>
       <MenuItem onClick={handleNotifMenuOpen}>
-        <IconButton color="inherit">
+        <IconButton title="Number of tasks for today" color="inherit">
           <Badge badgeContent={weekNotes.length} color="secondary">
             <NotificationsIcon />
           </Badge>
@@ -219,6 +233,7 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
+          title="Account"
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
@@ -263,17 +278,18 @@ const Topbar = ({handleDrawerToggle, drawerWidth, searchNotes, notes, history })
                   </div>
                   <div className={classes.grow} />
                   <div className={classes.sectionDesktop}>
-                    <IconButton color="inherit" onClick={() => history.push('/Calendar')}>
+                    <IconButton title="Number of tasks for following week" color="inherit" onClick={() => history.push('/Calendar')}>
                       <Badge badgeContent={todaysNotesCounter} color="secondary">
                         <EventNoteIcon />
                       </Badge>
                     </IconButton>
-                    <IconButton onClick={handleNotifMenuOpen} color="inherit">
+                    <IconButton title="Number of tasks for today" onClick={handleNotifMenuOpen} color="inherit">
                       <Badge badgeContent={weekNotes.length} color="secondary">
                         <NotificationsIcon />
                       </Badge>
                     </IconButton>
                     <IconButton
+                      title="Account"
                       edge="end"
                       aria-label="account of current user"
                       aria-controls={menuId}
